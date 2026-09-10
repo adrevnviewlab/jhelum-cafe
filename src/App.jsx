@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { CafeDialog, MobileNav, Visit } from './CafeUtility';
 
 const riverPath = "M 950 720 C 790 910, 800 1120, 970 1280 C 1130 1450, 1135 1690, 955 1880 C 775 2070, 770 2290, 950 2480 C 1125 2670, 1120 2900, 940 3090 C 760 3280, 765 3510, 950 3700 C 1135 3890, 1125 4120, 940 4310 C 755 4500, 760 4730, 950 4920 C 1135 5110, 1125 5340, 945 5530 C 770 5715, 780 5945, 955 6130 C 1125 6310, 1110 6530, 945 6700 C 800 6850, 800 7000, 930 7140";
 
@@ -12,7 +13,7 @@ function River() {
     <motion.div className="river-wrap" style={{ x, scaleX }} aria-hidden="true">
       <svg viewBox="0 0 1900 7800" preserveAspectRatio="none">
         <defs>
-          <mask id="river-reveal">
+          <mask id="river-reveal" maskUnits="userSpaceOnUse" x="0" y="0" width="1900" height="7800">
             <motion.path d={riverPath} pathLength="1" style={{ pathLength: reveal }} fill="none" stroke="white" strokeWidth="620" strokeLinecap="round" />
           </mask>
         </defs>
@@ -35,7 +36,7 @@ function MountainScene() {
   const opacity = useTransform(scrollYProgress, [0, .14, .2], [.92, .66, 0]);
   return (
     <motion.figure className="mountain-scene" style={{ y, scale, opacity }} aria-hidden="true">
-      <img src="/jhelum-headwaters.png" alt="" />
+      <img src="/jhelum-headwaters.webp" alt="" width="1536" height="1024" fetchPriority="high" />
       <div className="mountain-haze" />
     </motion.figure>
   );
@@ -53,17 +54,20 @@ function JourneyRail() {
 }
 
 function MountainEcho({ variant = "one" }) {
-  return <div className={`mountain-echo mountain-echo--${variant}`} aria-hidden="true"><img src="/jhelum-headwaters.png" alt="" /></div>;
+  return <div className={`mountain-echo mountain-echo--${variant}`} aria-hidden="true"><img src="/jhelum-headwaters.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024" /></div>;
 }
 
 function ScenicDecor({ type, position, caption }) {
-  const source = type === "chai" ? "/chai-still-life.png" : "/valley-greenery.png";
+  const notes = {
+    story: ['At our table', 'Food worth making time for.', 'Karahi, warm bread and cardamom chai. Familiar dishes, served with the generosity of a Punjabi table.'],
+    kitchen: ['The kitchen', 'Built around flavour.', 'Tomato, ginger and green chili give our chicken karahi its warmth. Order for the table and share every last spoonful.'],
+    punjab: ['Our inspiration', 'A culture of hospitality.', 'In Punjab, a meal is an invitation. That spirit shapes our cafe: make room, share the bread, pour another cup.'],
+    gathering: ['The daily ritual', 'Stay for chai.', 'A quiet pause after a meal, or a reason to meet in the afternoon. There is always time for one more conversation.'],
+  };
+  const [label, title, copy] = notes[position] || notes.story;
   return (
-    <Reveal className={`scenic-decor scenic-decor--${type} scenic-decor--${position}`}>
-      <figure>
-        <img src={source} alt={type === "chai" ? "Handmade chai cups, brass kettle, and paratha" : ""} />
-        {caption && <figcaption><span>{caption}</span><i /></figcaption>}
-      </figure>
+    <Reveal className={`editorial-note editorial-note--${position}`}>
+      <span>{label}</span><h3>{title}</h3><p>{copy}</p><i aria-hidden="true" />
     </Reveal>
   );
 }
@@ -86,7 +90,7 @@ function Label({ children, rust = false }) {
   return <p className={`label ${rust ? "label--rust" : ""}`}>{children}</p>;
 }
 
-function Hero() {
+function Hero({ open }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const opacity = useTransform(scrollYProgress, [0, .62, 1], [1, 1, 0]);
@@ -99,6 +103,7 @@ function Hero() {
         <p className="hero-intro">Where the mountain river meets a generous table.</p>
         <p className="hero-sub">Born among stone and snow.<br />Carried through Punjab.<br />Remembered over karahi and chai<br />in Brooklyn.</p>
         <a href="#beginning" className="follow">Follow the water <span /></a>
+        <div className="utility-actions hero-actions"><button onClick={() => open('menu')}>Explore the menu</button><button onClick={() => open('pickup')}>Plan your visit ↗</button></div>
       </motion.div>
       <div className="hero-reeds hero-reeds--left" aria-hidden="true" />
       <div className="hero-reeds hero-reeds--right" aria-hidden="true" />
@@ -140,7 +145,7 @@ function Kitchen() {
       <ScenicDecor type="chai" position="kitchen" caption="Morning chai / mountain air" />
       <Reveal className="placement placement--karahi">
         <motion.article className="menu-card" whileHover={{ y: -10, rotate: -.4 }} transition={{ type: "spring", stiffness: 180, damping: 18 }}>
-          <img src="/karahi.jpg" alt="Chicken karahi with green chiles and ginger" />
+          <img src="/karahi.jpg" alt="Chicken karahi with green chiles and ginger" loading="lazy" decoding="async" width="640" height="420" />
           <div className="menu-copy">
             <Label rust>From the kitchen / 07</Label>
             <h3>Chicken karahi</h3>
@@ -209,7 +214,7 @@ function Gathering() {
       </Reveal>
       <Reveal className="placement placement--chai">
         <motion.article className="image-card" whileHover={{ y: -9, rotate: .4 }}>
-          <img src="/chai.jpg" alt="Chai and paratha on a cafe table" />
+          <img src="/chai.jpg" alt="Chai and paratha on a cafe table" loading="lazy" decoding="async" width="640" height="420" />
           <div>
             <Label rust>The everyday / 11</Label>
             <h3>Chai, slowly</h3>
@@ -222,39 +227,35 @@ function Gathering() {
 }
 
 const orderOptions = [
-  ["Pickup", "Ready when you are"],
-  ["Delivery", "Brooklyn, nearby"],
-  ["Jhelum Club", "Every 6th chai, ours"],
-  ["+1", "Bring someone along"],
+  ["Pickup", "A considered meal, wherever the evening takes you.", "pickup"],
+  ["Delivery", "Explore dining at home.", "delivery"],
+  ["Jehlum Club", "For those who make a ritual of returning.", "club"],
+  ["Share a table", "An invitation is always a good beginning.", "share"],
 ];
 
-function TakeHome() {
+function TakeHome({ open }) {
   return (
-    <section className="scene scene--home">
-      <MountainEcho variant="five" />
-      <ScenicDecor type="greenery" position="home" />
-      <Reveal className="placement placement--home">
-        <PaperCard>
-          <Label>05 / Take a little home</Label>
-          <h3>Jehlum, wherever you are</h3>
-          <p>Your table does not have to end at the door. Take the familiar things home: warm bread, slow karahi, something sweet, and enough chai for whoever arrives.</p>
-          <div className="order-grid">
-            {orderOptions.map(([title, sub]) => (
-              <motion.button key={title} whileHover={{ backgroundColor: "#214e56", color: "#f7f3e7", y: -3 }} whileTap={{ scale: .97 }}>
-                <strong>{title}</strong><span>{sub}</span>
-              </motion.button>
+    <section className="scene scene--home home-editorial" aria-labelledby="home-title">
+      <Reveal className="home-salon">
+        <div className="home-intro">
+          <Label>05 / Beyond our table</Label>
+          <h2 id="home-title">The pleasure<br />of a meal.<br /><em>The comfort<br />of home.</em></h2>
+          <p>Slow karahi. Bread to share. Chai to linger over. Bring a little of Jehlum into your evening.</p>
+          <span className="home-signature">Jehlum Cafe <i /> Brooklyn, New York</span>
+        </div>
+        <div className="home-services">
+          <p className="home-services-label">Make an evening of it</p>
+          <div className="home-action-list">
+            {orderOptions.map(([title, sub, mode], index) => (
+              <button key={title} onClick={() => open(mode)}>
+                <span className="home-action-number">0{index + 1}</span><span className="home-action-copy"><strong>{title}</strong><span>{sub}</span></span><span className="home-action-arrow" aria-hidden="true">↗</span>
+              </button>
             ))}
           </div>
-        </PaperCard>
+          <p className="home-service-note">Explore our menu, plan your visit, or invite someone along.</p>
+        </div>
       </Reveal>
-      <Reveal className="placement placement--last">
-        <PaperCard>
-          <Label>The last bend</Label>
-          <h2>A table<br />with a<br />story</h2>
-          <p>It starts somewhere far away. It arrives warm, set down between people, and becomes yours for a while. Every table adds another bend to the river.</p>
-          <div className="split-meta"><span>Open daily</span><span>Brooklyn, NY</span></div>
-        </PaperCard>
-      </Reveal>
+      <div className="home-colophon"><span>The last bend</span><p>Every good table has a story.<br />There is room for yours.</p><span>With warmth, Jehlum</span></div>
     </section>
   );
 }
@@ -263,7 +264,7 @@ function Footer() {
   return (
     <footer className="scene footer">
       <motion.div className="pond-scene" initial={{ scale: 1.04 }} whileInView={{ scale: 1 }} transition={{ duration: 2.4, ease: [.16, 1, .3, 1] }} viewport={{ once: false, amount: .15 }} aria-hidden="true">
-        <img src="/punjab-pond.png" alt="" />
+        <img src="/punjab-pond.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024" />
         <div className="pond-glow" />
       </motion.div>
       <div className="grass" aria-hidden="true" />
@@ -278,5 +279,6 @@ function Footer() {
 }
 
 export default function App() {
-  return <main><MountainScene /><River /><JourneyRail /><Hero /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome /><Footer /></main>;
+  const [mode, setMode] = useState(null);
+  return <><main><MountainScene /><River /><JourneyRail /><Hero open={setMode} /><Visit open={setMode} /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={setMode} /><Footer /></main><MobileNav open={setMode} />{mode && <CafeDialog key={mode} mode={mode} close={() => setMode(null)} changeMode={setMode} />}</>;
 }
