@@ -1,9 +1,10 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import { MotionConfig } from "framer-motion";
 import "./styles.css";
 import "./utility.css";
 
 createRoot(document.getElementById("root")).render(
-  <React.StrictMode><App /></React.StrictMode>,
+  <React.StrictMode><MotionConfig reducedMotion="user"><App /></MotionConfig></React.StrictMode>,
 );

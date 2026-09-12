@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { CafeDialog, MobileNav, Visit } from './CafeUtility';
+import MenuCatalog from './MenuCatalog';
 
 const riverPath = "M 950 720 C 790 910, 800 1120, 970 1280 C 1130 1450, 1135 1690, 955 1880 C 775 2070, 770 2290, 950 2480 C 1125 2670, 1120 2900, 940 3090 C 760 3280, 765 3510, 950 3700 C 1135 3890, 1125 4120, 940 4310 C 755 4500, 760 4730, 950 4920 C 1135 5110, 1125 5340, 945 5530 C 770 5715, 780 5945, 955 6130 C 1125 6310, 1110 6530, 945 6700 C 800 6850, 800 7000, 930 7140";
 
@@ -59,8 +60,8 @@ function MountainEcho({ variant = "one" }) {
 
 function ScenicDecor({ type, position, caption }) {
   const notes = {
-    story: ['At our table', 'Food worth making time for.', 'Karahi, warm bread and cardamom chai. Familiar dishes, served with the generosity of a Punjabi table.'],
-    kitchen: ['The kitchen', 'Built around flavour.', 'Tomato, ginger and green chili give our chicken karahi its warmth. Order for the table and share every last spoonful.'],
+    story: ['At our table', 'Food worth making time for.', 'Breakfast sandwiches, desi chaat and cardamom chai. Familiar dishes, served with the generosity of a Punjabi table.'],
+    kitchen: ['The kitchen', 'A little spice. A little comfort.', 'Samosa chaat, masala fries and an anda shami burger. Our desi favourites bring a taste of home to your day.'],
     punjab: ['Our inspiration', 'A culture of hospitality.', 'In Punjab, a meal is an invitation. That spirit shapes our cafe: make room, share the bread, pour another cup.'],
     gathering: ['The daily ritual', 'Stay for chai.', 'A quiet pause after a meal, or a reason to meet in the afternoon. There is always time for one more conversation.'],
   };
@@ -101,7 +102,7 @@ function Hero({ open }) {
         <Label>A mountain kitchen / since 2024</Label>
         <h1 className="brand-title"><span>Jehlum</span><em>Cafe</em></h1>
         <p className="hero-intro">Where the mountain river meets a generous table.</p>
-        <p className="hero-sub">Born among stone and snow.<br />Carried through Punjab.<br />Remembered over karahi and chai<br />in Brooklyn.</p>
+        <p className="hero-sub">Inspired by Punjab.<br />At home in Brooklyn.<br />Breakfast, desi favourites<br />and a cup of chai.</p>
         <a href="#beginning" className="follow">Follow the water <span /></a>
         <div className="utility-actions hero-actions"><button onClick={() => open('menu')}>Explore the menu</button><button onClick={() => open('pickup')}>Plan your visit ↗</button></div>
       </motion.div>
@@ -145,12 +146,12 @@ function Kitchen() {
       <ScenicDecor type="chai" position="kitchen" caption="Morning chai / mountain air" />
       <Reveal className="placement placement--karahi">
         <motion.article className="menu-card" whileHover={{ y: -10, rotate: -.4 }} transition={{ type: "spring", stiffness: 180, damping: 18 }}>
-          <img src="/karahi.jpg" alt="Chicken karahi with green chiles and ginger" loading="lazy" decoding="async" width="640" height="420" />
+          <div className="featured-menu-panel"><span>Desi chaska</span><strong>A taste<br /><em>of home.</em></strong><a href="#menu">Explore the menu ↗</a></div>
           <div className="menu-copy">
             <Label rust>From the kitchen / 07</Label>
-            <h3>Chicken karahi</h3>
-            <p>Slow-cooked tomato,<br />ginger, green chili.</p>
-            <div className="price"><strong>$18</strong><span>Best shared</span></div>
+            <h3>Samosa chaat</h3>
+            <p>A desi favourite,<br />for a little afternoon comfort.</p>
+            <div className="price"><strong>$5.99</strong><span>Desi chaska</span></div>
           </div>
         </motion.article>
       </Reveal>
@@ -209,7 +210,7 @@ function Gathering() {
           <Label>04 / At the water&apos;s edge</Label>
           <div className="color-bars" aria-hidden="true">{[1,2,3,4,5,6,7].map(n => <i key={n} />)}</div>
           <h3>Made for gathering</h3>
-          <p>Pull up a chair. There is always room for one more, always another piece of paratha to tear, and always another pot of chai on its way.</p>
+          <p>Pull up a chair. Start with breakfast, stay for conversation, and find your favourite cup among our cardamom, masala and karak chai.</p>
         </PaperCard>
       </Reveal>
       <Reveal className="placement placement--chai">
@@ -240,7 +241,7 @@ function TakeHome({ open }) {
         <div className="home-intro">
           <Label>05 / Beyond our table</Label>
           <h2 id="home-title">The pleasure<br />of a meal.<br /><em>The comfort<br />of home.</em></h2>
-          <p>Slow karahi. Bread to share. Chai to linger over. Bring a little of Jehlum into your evening.</p>
+          <p>A Brooklyn breakfast. A little desi chaat. Chai to linger over. Bring a little of Jehlum into your day.</p>
           <span className="home-signature">Jehlum Cafe <i /> Brooklyn, New York</span>
         </div>
         <div className="home-services">
@@ -272,7 +273,7 @@ function Footer() {
         <Label rust>The river continues</Label>
         <h2>Jehlum Cafe</h2>
         <motion.a href="#beginning" whileHover={{ scale: 1.03 }} whileTap={{ scale: .98 }}>Come sit by the water <span>↗</span></motion.a>
-        <p>Open daily · Coney Island Avenue · Brooklyn, New York</p>
+        <p>Open daily · 937 Coney Island Ave · Brooklyn, NY 11230</p>
       </Reveal>
     </footer>
   );
@@ -280,5 +281,5 @@ function Footer() {
 
 export default function App() {
   const [mode, setMode] = useState(null);
-  return <><main><MountainScene /><River /><JourneyRail /><Hero open={setMode} /><Visit open={setMode} /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={setMode} /><Footer /></main><MobileNav open={setMode} />{mode && <CafeDialog key={mode} mode={mode} close={() => setMode(null)} changeMode={setMode} />}</>;
+  return <><main><MountainScene /><River /><JourneyRail /><Hero open={setMode} /><Visit open={setMode} /><MenuCatalog /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={setMode} /><Footer /></main><MobileNav open={setMode} />{mode && <CafeDialog key={mode} mode={mode} close={() => setMode(null)} changeMode={setMode} />}</>;
 }
