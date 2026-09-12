@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { CafeDialog, MobileNav, Visit } from './CafeUtility';
 import MenuCatalog from './MenuCatalog';
+import CafeHeader from './CafeHeader';
 
 const riverPath = "M 950 720 C 790 910, 800 1120, 970 1280 C 1130 1450, 1135 1690, 955 1880 C 775 2070, 770 2290, 950 2480 C 1125 2670, 1120 2900, 940 3090 C 760 3280, 765 3510, 950 3700 C 1135 3890, 1125 4120, 940 4310 C 755 4500, 760 4730, 950 4920 C 1135 5110, 1125 5340, 945 5530 C 770 5715, 780 5945, 955 6130 C 1125 6310, 1110 6530, 945 6700 C 800 6850, 800 7000, 930 7140";
 
@@ -281,5 +282,5 @@ function Footer() {
 
 export default function App() {
   const [mode, setMode] = useState(null);
-  return <><main><MountainScene /><River /><JourneyRail /><Hero open={setMode} /><Visit open={setMode} /><MenuCatalog /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={setMode} /><Footer /></main><MobileNav open={setMode} />{mode && <CafeDialog key={mode} mode={mode} close={() => setMode(null)} changeMode={setMode} />}</>;
+  return <><CafeHeader open={setMode} /><main id="top"><MountainScene /><River /><JourneyRail /><Hero open={setMode} /><Visit open={setMode} /><MenuCatalog /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={setMode} /><Footer /></main><MobileNav open={setMode} />{mode && <CafeDialog key={mode} mode={mode} close={() => setMode(null)} changeMode={setMode} />}</>;
 }
