@@ -1,4 +1,4 @@
-export const cafe = { address: '937 Coney Island Ave, Brooklyn, NY 11230', phone: '929-234-3401', phoneHref: 'tel:+19292343401' };
+export const cafe = { address: '937 Coney Island Ave, Brooklyn, NY 11230', phone: '929-234-3401', phoneHref: 'tel:+19292343401', hoursLabel: 'Open daily · 10 AM – 11 PM' };
 const item = (id, name, cents, description = '', extra = {}) => ({ id, name, cents, description, ...extra });
 const drinks = (small, large, icedSmall, icedLarge) => [
   { label: 'Hot · Small', cents: small }, { label: 'Hot · Large', cents: large },
@@ -15,10 +15,12 @@ export const menuSections = [
     item('balt', 'B.A.L.T', 799, 'Turkey bacon, avocado, lettuce & tomato.'),
     item('tuna', 'Tuna Melt', 999, 'Tuna salad, cheddar cheese, lettuce & tomato.'),
     item('smash', 'Smash Burger', 799, 'Beef.'),
-    item('pancake', 'Pancake', 799, '', { variants: [{ label: 'Classic', cents: 799 }, { label: 'With 2 eggs', cents: 1099 }] }),
-    item('waffles', 'Waffles', 799, '', { variants: [{ label: 'Classic', cents: 799 }, { label: 'With 2 eggs', cents: 1099 }] }),
+    item('pancake', 'Pancake', 799, 'Classic preparation, without the two-egg side.'),
+    item('pancake-eggs', 'Pancake with 2 Eggs', 1099, 'Includes two eggs. $10.99 is the complete dish price.'),
+    item('waffles', 'Waffles', 799, 'Classic preparation, without the two-egg side.'),
+    item('waffles-eggs', 'Waffles with 2 Eggs', 1099, 'Includes two eggs. $10.99 is the complete dish price.'),
     item('toast', 'French Toast', 799, 'With maple syrup & whip cream.'),
-    item('crepes', 'Crepes', 999, 'Choice of 3 toppings & 1 scoop of ice cream.'),
+    item('crepes', 'Crepes', 999, 'Includes 3 toppings & 1 scoop of ice cream.', { modifiers: [{ id: 'extra-banana', label: 'Extra banana', cents: 200 }, { id: 'extra-strawberry', label: 'Extra strawberry', cents: 200 }] }),
   ] },
   { id: 'coffee', title: 'Coffee & tea bar', subtitle: 'A cup for every kind of day.', note: 'Coffee options listed: French vanilla, caramel mocha, espresso, latte and cappuccino. Ask the cafe about any additional charges.', items: [
     item('coffee', 'Black Coffee', 250, '', { variants: drinks(250,300,350,400) }),
@@ -38,7 +40,7 @@ export const menuSections = [
     item('masala', 'Masala Chai', null), item('karak', 'Karak Chai (Taiz Patti)', null),
     item('doodh', 'Special Doodh Pati Chai', null),
   ] },
-  { id: 'smoothies', title: 'Smoothies', subtitle: 'Fruit, blended fresh.', note: 'Add protein +$3.00.', items: [
+  { id: 'smoothies', title: 'Smoothies', subtitle: 'Fruit, blended fresh.', note: 'Each smoothie is $9.99, or $12.99 with protein.', modifiers: [{ id: 'protein', label: 'Protein', cents: 300 }], items: [
     item('nutty', 'Nutty Professor', 999, 'Natural peanut butter, honey, cinnamon, oats & oat milk.'),
     item('banana', 'Banana Nut', 999, 'Banana, cinnamon, natural peanut butter & almond milk.'),
     item('berry', 'Wild Berry', 999, 'Strawberry, raspberry, blueberry & vanilla yogurt.'),
@@ -56,6 +58,16 @@ export const menuSections = [
     item('cinnamon', 'Cinnamon Bun', 300), item('cookie', 'Chocolate Chip Cookie', 300),
   ] },
 ];
-export const menuItems = menuSections.flatMap(section => section.items);
+export const menuItems = menuSections.flatMap(section => section.items.map(item => ({ ...item, modifiers: item.modifiers || section.modifiers || [] })));
 export const money = cents => cents == null ? 'Ask the cafe' : `$${(cents / 100).toFixed(2)}`;
-export const crepeToppings = 'Strawberry, banana, Nutella, pistachio, sprinkles, almonds, dates, walnuts & coconut flakes. Extras: banana +$2, strawberry +$2.';
+export const crepeToppings = 'Included topping choices: strawberry, banana, Nutella, pistachio, sprinkles, almonds, dates, walnuts & coconut flakes.';
+export function filterMenu(category, query = '') {
+  const search = query.trim().toLowerCase();
+  return menuSections.filter(section => search || category === 'all' || section.id === category)
+    .map(section => ({ ...section, items: section.items.filter(item => !search || `${item.name} ${item.description} ${section.title}`.toLowerCase().includes(search)) }))
+    .filter(section => section.items.length);
+}
+export function itemPrice(item, variantIndex = 0, modifierIds = []) {
+  const base = item.variants?.[variantIndex]?.cents ?? item.cents;
+  return base == null ? null : base + (item.modifiers || []).filter(modifier => modifierIds.includes(modifier.id)).reduce((sum, modifier) => sum + modifier.cents, 0);
+}

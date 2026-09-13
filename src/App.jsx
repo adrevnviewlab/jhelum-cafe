@@ -3,33 +3,9 @@ import { useRef, useState } from "react";
 import { CafeDialog, MobileNav, Visit } from './CafeUtility';
 import MenuCatalog from './MenuCatalog';
 import CafeHeader from './CafeHeader';
-
-const riverPath = "M 950 720 C 790 910, 800 1120, 970 1280 C 1130 1450, 1135 1690, 955 1880 C 775 2070, 770 2290, 950 2480 C 1125 2670, 1120 2900, 940 3090 C 760 3280, 765 3510, 950 3700 C 1135 3890, 1125 4120, 940 4310 C 755 4500, 760 4730, 950 4920 C 1135 5110, 1125 5340, 945 5530 C 770 5715, 780 5945, 955 6130 C 1125 6310, 1110 6530, 945 6700 C 800 6850, 800 7000, 930 7140";
-
-function River() {
-  const { scrollYProgress } = useScroll();
-  const x = useTransform(scrollYProgress, [0, .28, .56, .82, 1], [0, -28, 34, -20, 0]);
-  const scaleX = useTransform(scrollYProgress, [0, .45, 1], [1, 1.045, .98]);
-  const reveal = useTransform(scrollYProgress, [0, .085, .91], [0, 0, 1]);
-  return (
-    <motion.div className="river-wrap" style={{ x, scaleX }} aria-hidden="true">
-      <svg viewBox="0 0 1900 7800" preserveAspectRatio="none">
-        <defs>
-          <mask id="river-reveal" maskUnits="userSpaceOnUse" x="0" y="0" width="1900" height="7800">
-            <motion.path d={riverPath} pathLength="1" style={{ pathLength: reveal }} fill="none" stroke="white" strokeWidth="620" strokeLinecap="round" />
-          </mask>
-        </defs>
-        <g mask="url(#river-reveal)">
-          <path className="river-bank" d={riverPath} />
-          <motion.path className="river" d={riverPath} animate={{ opacity: [1, .975, 1] }} transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }} />
-          <path className="river-current river-current--one" d={riverPath} pathLength="1" />
-          <path className="river-current river-current--two" d={riverPath} pathLength="1" />
-          <path className="river-current river-current--three" d={riverPath} pathLength="1" />
-        </g>
-      </svg>
-    </motion.div>
-  );
-}
+import Copyright from './Copyright';
+import { cafe } from './menuData';
+import WaterRiver from './water/WaterRiver';
 
 function MountainScene() {
   const { scrollYProgress } = useScroll();
@@ -37,8 +13,8 @@ function MountainScene() {
   const scale = useTransform(scrollYProgress, [0, .16], [1, 1.1]);
   const opacity = useTransform(scrollYProgress, [0, .14, .2], [.92, .66, 0]);
   return (
-    <motion.figure className="mountain-scene" style={{ y, scale, opacity }} aria-hidden="true">
-      <img src="/jhelum-headwaters.webp" alt="" width="1536" height="1024" fetchPriority="high" />
+    <motion.figure className="mountain-scene" style={{ y, scale, opacity }}>
+      <img src="/mountain-sunset.webp" alt="Golden sunset over snow-capped mountains, a forested valley and a rocky river." width="1783" height="882" fetchPriority="high" />
       <div className="mountain-haze" />
     </motion.figure>
   );
@@ -56,7 +32,8 @@ function JourneyRail() {
 }
 
 function MountainEcho({ variant = "one" }) {
-  return <div className={`mountain-echo mountain-echo--${variant}`} aria-hidden="true"><img src="/jhelum-headwaters.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024" /></div>;
+  // This repeats the hero scenery as a texture; keep it out of the reading order.
+  return <div className={`mountain-echo mountain-echo--${variant}`} aria-hidden="true"><img src="/mountain-sunset.webp" alt="Sunset mountain valley and river, repeated as a background texture." loading="lazy" decoding="async" width="1783" height="882" /></div>;
 }
 
 function ScenicDecor({ type, position, caption }) {
@@ -92,6 +69,10 @@ function Label({ children, rust = false }) {
   return <p className={`label ${rust ? "label--rust" : ""}`}>{children}</p>;
 }
 
+function ActionArrow() {
+  return <span className="action-arrow" aria-hidden="true">↗</span>;
+}
+
 function Hero({ open }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -99,13 +80,14 @@ function Hero({ open }) {
   const y = useTransform(scrollYProgress, [0, 1], [0, -90]);
   return (
     <section ref={ref} className="hero scene">
+      <MountainScene />
       <motion.div className="hero-copy" style={{ opacity, y }}>
         <Label>A mountain kitchen / since 2024</Label>
         <h1 className="brand-title"><span>Jehlum</span><em>Cafe</em></h1>
         <p className="hero-intro">Where the mountain river meets a generous table.</p>
         <p className="hero-sub">Inspired by Punjab.<br />At home in Brooklyn.<br />Breakfast, desi favourites<br />and a cup of chai.</p>
         <a href="#beginning" className="follow">Follow the water <span /></a>
-        <div className="utility-actions hero-actions"><button onClick={() => open('menu')}>Explore the menu</button><button onClick={() => open('pickup')}>Plan your visit ↗</button></div>
+        <div className="utility-actions hero-actions"><button onClick={() => open('menu')}>Explore the menu</button><a className="visit-action" href="#visit">Plan your visit ↗</a></div>
       </motion.div>
       <div className="hero-reeds hero-reeds--left" aria-hidden="true" />
       <div className="hero-reeds hero-reeds--right" aria-hidden="true" />
@@ -115,7 +97,7 @@ function Hero({ open }) {
 
 function Beginning() {
   return (
-    <section id="beginning" className="scene scene--story">
+    <section id="beginning" tabIndex={-1} className="scene scene--story">
       <MountainEcho variant="one" />
       <ScenicDecor type="greenery" position="story" />
       <Reveal className="placement placement--beginning">
@@ -177,7 +159,7 @@ function PunjabInterlude() {
       <Reveal className="placement placement--fivewaters">
         <div className="chapter-title">
           <Label>Punjab / land of five waters</Label>
-          <h2>Where water<br />teaches the<br />land to gather.</h2>
+          <h2>Where water teaches the land to gather.</h2>
           <p>Jhelum is one current in a much older constellation. Across wheat fields, market roads, courtyards and railway bridges, water has always been a way of finding one another.</p>
         </div>
       </Reveal>
@@ -249,8 +231,8 @@ function TakeHome({ open }) {
           <p className="home-services-label">Make an evening of it</p>
           <div className="home-action-list">
             {orderOptions.map(([title, sub, mode], index) => (
-              <button key={title} onClick={() => open(mode)}>
-                <span className="home-action-number">0{index + 1}</span><span className="home-action-copy"><strong>{title}</strong><span>{sub}</span></span><span className="home-action-arrow" aria-hidden="true">↗</span>
+              <button className="action-card" type="button" key={title} onClick={() => open(mode)}>
+                <span className="home-action-number">0{index + 1}</span><span className="home-action-copy"><strong>{title}</strong><span>{sub}</span></span><ActionArrow />
               </button>
             ))}
           </div>
@@ -265,16 +247,18 @@ function TakeHome({ open }) {
 function Footer() {
   return (
     <footer className="scene footer">
-      <motion.div className="pond-scene" initial={{ scale: 1.04 }} whileInView={{ scale: 1 }} transition={{ duration: 2.4, ease: [.16, 1, .3, 1] }} viewport={{ once: false, amount: .15 }} aria-hidden="true">
-        <img src="/punjab-pond.webp" alt="" loading="lazy" decoding="async" width="1536" height="1024" />
+      <motion.div className="pond-scene" initial={{ scale: 1.04 }} whileInView={{ scale: 1 }} transition={{ duration: 2.4, ease: [.16, 1, .3, 1] }} viewport={{ once: false, amount: .15 }}>
+        <img src="/pond-sunset.webp" alt="A mountain river widens into a calm pond, reflecting the golden sunset between grassy banks and rocks." loading="lazy" decoding="async" width="1782" height="883" />
         <div className="pond-glow" />
       </motion.div>
       <div className="grass" aria-hidden="true" />
       <Reveal className="footer-inner">
         <Label rust>The river continues</Label>
         <h2>Jehlum Cafe</h2>
-        <motion.a href="#beginning" whileHover={{ scale: 1.03 }} whileTap={{ scale: .98 }}>Come sit by the water <span>↗</span></motion.a>
-        <p>Open daily · 937 Coney Island Ave · Brooklyn, NY 11230</p>
+        <a className="action-card" href="#visit"><span>Come sit by the water</span><ActionArrow /></a>
+        <p className="footer-hours"><strong>{cafe.hoursLabel}</strong><span>Brooklyn local time</span></p>
+        <p className="footer-address">{cafe.address}</p>
+        <Copyright />
       </Reveal>
     </footer>
   );
@@ -282,5 +266,5 @@ function Footer() {
 
 export default function App() {
   const [mode, setMode] = useState(null);
-  return <><CafeHeader open={setMode} /><main id="top"><MountainScene /><River /><JourneyRail /><Hero open={setMode} /><Visit open={setMode} /><MenuCatalog /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={setMode} /><Footer /></main><MobileNav open={setMode} />{mode && <CafeDialog key={mode} mode={mode} close={() => setMode(null)} changeMode={setMode} />}</>;
+  return <><CafeHeader open={setMode} /><main id="top"><WaterRiver /><JourneyRail /><Hero open={setMode} /><Visit open={setMode} /><MenuCatalog /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={setMode} /><Footer /></main><MobileNav open={setMode} />{mode && <CafeDialog key={mode} mode={mode} close={() => setMode(null)} changeMode={setMode} />}</>;
 }
