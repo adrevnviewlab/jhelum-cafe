@@ -33,17 +33,12 @@ main {
 .journey-rail { color: #ead6ac; }
 .journey-rail i { background: #d8b97940; }
 .journey-rail i b { background: var(--gold); }
-.river-wrap { filter: drop-shadow(14px 18px 24px #071b2540); }
-.river { stroke: url(#sunset-water); }
-.river-current { stroke: #e9c68970; animation-duration: 38s; }
-.river-current--two { stroke: #e4c78e35; animation-duration: 52s; }
-.river-current--three { stroke: #fbdeb347; animation-duration: 64s; }
 .mountain-echo { opacity: .22; mix-blend-mode: luminosity; height: 100%; top: 0; }
 .mountain-echo img { filter: saturate(.6) brightness(.68); }
-.scene--story::before,.scene--gathering::before,.field-ribbons { display: none; }
+.scene--story::before,.scene--gathering::before { display: none; }
 .scene--punjab::after { color: #eacb8b0c; }
 
-.visit-strip,.menu-catalog:not(.menu-catalog--compact) {
+.visit-strip,.menu-catalog {
   background-color: var(--paper);
   background-image: repeating-linear-gradient(0deg,#ffffff12 0 1px,transparent 1px 4px),var(--linen);
   border: 1px solid #d9bc865e;
@@ -59,7 +54,7 @@ main {
 .utility-actions button:hover,.primary-action:not(:disabled):hover { background: #17382f; }
 .utility-actions button + button { color: #254b43; border-color: #254b4370; }
 .utility-actions button + button:hover { background: #254b43; }
-.menu-catalog:not(.menu-catalog--compact) { margin-bottom: 48px; }
+.menu-catalog { margin-bottom: 48px; }
 .catalog-heading { padding-bottom: 28px; border-bottom: 1px solid var(--hairline); }
 .catalog-heading .label { color: #805a2c; font-size: 10px; }
 .catalog-heading h2,.catalog-section-heading h3 { color: #203b36; }
@@ -136,7 +131,6 @@ main {
 .footer-inner .label { color: #80582b; }
 .cafe-dialog { background: #f4ead7; border-color: #ba975a; border-radius: 16px; }
 .cafe-dialog::backdrop { background: #091f22cc; }
-.menu-catalog--compact { background: transparent; }
 .cafe-dialog input:not([type=radio]):not([type=checkbox]),.cafe-dialog select { background: #fff8eb; border-color: #a28d65; border-radius: 10px; }
 .mobile-nav { background: #122d28; border-top: 1px solid #d6b97d55; }
 .mobile-nav button:nth-child(2) { background: #d4ae6b; border-radius: 9999px; }
@@ -150,7 +144,7 @@ main {
   .scene:is(.scene--story,.scene--kitchen,.scene--gathering,.scene--punjab) { padding-block: 26px; }
   .catalog-heading { padding-bottom: 20px; }
   .visit-strip { margin-top: 8px; margin-bottom: 24px; }
-  .menu-catalog:not(.menu-catalog--compact) { margin-bottom: 20px; }
+  .menu-catalog { margin-bottom: 20px; }
   .footer-inner { padding-inline: 24px; }
 }
 
@@ -191,10 +185,6 @@ button:not(:disabled):active { transform: translateY(1px); }
 .catalog-empty .primary-action { width: auto; }
 .cafe-dialog fieldset { min-width: 0; border-radius: 10px; }
 .cafe-dialog legend { font-size: 14px; padding-inline: 5px; }
-.basket-line,.basket-total { flex-wrap: wrap; }
-.basket-line > div { min-width: 0; flex: 1 1 180px; }
-.basket-line > label { flex: 0 0 90px; }
-.basket-total strong { white-space: nowrap; }
 .cafe-dialog select { max-width: 100%; }
 
 /* Keep narrative content in normal flow as the viewport narrows. */

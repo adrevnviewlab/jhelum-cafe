@@ -1,11 +1,11 @@
 import Icon from './Icon';
 
-export default function CafeHeader({ open }) {
+export default function CafeHeader({ openMenu, openOrder, openCart, cartCount, menuOpen }) {
   return <>
     <a className="skip-link" href="#menu">Skip to menu</a>
     <header className="cafe-header">
       <nav className="header-nav header-nav--left" aria-label="Explore the cafe">
-        <a href="#menu">Menu</a><a className="header-story" href="#beginning">Our story</a>
+        <button type="button" className="header-menu-button" onClick={openMenu} aria-expanded={menuOpen} aria-controls="menu-drawer">Menu</button><a className="header-story" href="#beginning">Our story</a>
       </nav>
       <a className="cafe-wordmark" href="#top" aria-label="Jehlum Cafe — home">
         <svg className="brand-seal" viewBox="0 0 48 54" fill="none" aria-hidden="true">
@@ -17,7 +17,9 @@ export default function CafeHeader({ open }) {
         <span><strong>Jehlum</strong><small>Cafe <i aria-hidden="true" /> Brooklyn</small></span>
       </a>
       <nav className="header-nav header-nav--right" aria-label="Plan your visit">
-        <a href="#visit">Visit us</a><button onClick={() => open('pickup')}>Order online <Icon /></button>
+        <a href="#visit">Visit us</a>
+        <button type="button" className="header-order" onClick={openOrder}>Order online <Icon /></button>
+        <button type="button" className="header-cart" onClick={openCart} aria-label={`Open cart with ${cartCount} ${cartCount === 1 ? 'item' : 'items'}`}><Icon name="bag" /><span aria-live="polite">{cartCount}</span></button>
       </nav>
     </header>
   </>;

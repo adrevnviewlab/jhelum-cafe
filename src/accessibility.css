@@ -24,7 +24,7 @@ html { scroll-padding-top: calc(var(--header-height) + 16px); }
 .hero h1 em,.hero .label,.hero .follow { color: var(--read-gold); }
 .hero .visit-action { background: var(--read-dark); color: var(--read-light); }
 .hero .visit-action:hover { background: #254b43; }
-.paper-card,.menu-card,.image-card,.footer-inner,.visit-strip,.menu-catalog:not(.menu-catalog--compact) { background: var(--read-paper); color: var(--read-ink); }
+.paper-card,.menu-card,.image-card,.footer-inner,.visit-strip,.menu-catalog { background: var(--read-paper); color: var(--read-ink); }
 .paper-card--dark,.editorial-note,.chapter-title,.home-salon,.featured-menu-panel,.home-colophon { background: var(--read-dark); color: var(--read-light); }
 .paper-card--dark :is(h2,h3),.editorial-note h3,.chapter-title h2 { color: var(--read-light); }
 .paper-card p,.menu-copy p,.image-card p,.catalog-item > p,.catalog-note,.catalog-count,.catalog-footer p,.catalog-heading > p,.utility-note,.footer-inner > p { color: var(--read-muted); }

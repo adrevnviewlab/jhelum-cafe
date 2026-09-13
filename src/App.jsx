@@ -1,12 +1,14 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
-import { CafeDialog, MobileNav, Visit } from './CafeUtility';
+import { useEffect, useRef, useState } from "react";
+import { InfoDialog, MobileNav, Visit } from './CafeUtility';
+import { CartDrawer, ItemDialog, MenuDrawer } from './CommercePanels';
 import MenuCatalog from './MenuCatalog';
 import CafeHeader from './CafeHeader';
 import Copyright from './Copyright';
-import { cafe } from './menuData';
+import { cafe, menuItems } from './menuData';
 import WaterRiver from './water/WaterRiver';
 import Icon from './Icon';
+import useCart from './useCart';
 
 function MountainScene() {
   const { scrollYProgress } = useScroll();
@@ -32,7 +34,7 @@ function JourneyRail() {
   );
 }
 
-function ScenicDecor({ type, position, caption }) {
+function ScenicDecor({ position }) {
   const notes = {
     story: ['At our table', 'Food worth making time for.', 'Breakfast sandwiches, desi chaat and cardamom chai. Familiar dishes, served with the generosity of a Punjabi table.'],
     kitchen: ['The kitchen', 'A little spice. A little comfort.', 'Samosa chaat, masala fries and an anda shami burger. Our desi favourites bring a taste of home to your day.'],
@@ -69,7 +71,7 @@ function ActionArrow() {
   return <span className="action-arrow" aria-hidden="true"><Icon /></span>;
 }
 
-function Hero() {
+function Hero({ openMenu }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const opacity = useTransform(scrollYProgress, [0, .62, 1], [1, 1, 0]);
@@ -83,7 +85,7 @@ function Hero() {
         <p className="hero-intro">Where the mountain river meets a generous table.</p>
         <p className="hero-sub">Inspired by Punjab.<br />At home in Brooklyn.<br />Breakfast, desi favourites<br />and a cup of chai.</p>
         <a href="#beginning" className="follow">Follow the water <span /></a>
-        <div className="utility-actions hero-actions"><a className="menu-anchor" href="#menu">Explore the menu <Icon /></a><a className="visit-action" href="#visit">Plan your visit <Icon /></a></div>
+        <div className="utility-actions hero-actions"><button type="button" className="menu-anchor" onClick={openMenu}>Explore the menu <Icon /></button><a className="visit-action" href="#visit">Plan your visit <Icon /></a></div>
       </motion.div>
       <div className="hero-reeds hero-reeds--left" aria-hidden="true" />
       <div className="hero-reeds hero-reeds--right" aria-hidden="true" />
@@ -94,7 +96,7 @@ function Hero() {
 function Beginning() {
   return (
     <section id="beginning" tabIndex={-1} className="scene scene--story">
-      <ScenicDecor type="greenery" position="story" />
+      <ScenicDecor position="story" />
       <Reveal className="placement placement--beginning">
         <PaperCard>
           <Label>01 / The beginning</Label>
@@ -120,7 +122,7 @@ function Beginning() {
 function Kitchen() {
   return (
     <section className="scene scene--kitchen">
-      <ScenicDecor type="chai" position="kitchen" caption="Morning chai / mountain air" />
+      <ScenicDecor position="kitchen" />
       <Reveal className="placement placement--karahi">
         <motion.article className="menu-card" whileHover={{ y: -10, rotate: -.4 }} transition={{ type: "spring", stiffness: 180, damping: 18 }}>
           <div className="featured-menu-panel"><span>Desi chaska</span><strong>A taste<br /><em>of home.</em></strong><a href="#menu">Explore the menu <Icon /></a></div>
@@ -147,8 +149,7 @@ function Kitchen() {
 function PunjabInterlude() {
   return (
     <section className="scene scene--punjab">
-      <ScenicDecor type="greenery" position="punjab" />
-      <div className="field-ribbons" aria-hidden="true"><i /><i /><i /><i /><i /></div>
+      <ScenicDecor position="punjab" />
       <Reveal className="placement placement--fivewaters">
         <div className="chapter-title">
           <Label>Punjab / land of five waters</Label>
@@ -179,7 +180,7 @@ function PunjabInterlude() {
 function Gathering() {
   return (
     <section className="scene scene--gathering">
-      <ScenicDecor type="chai" position="gathering" caption="Two cups / no hurry" />
+      <ScenicDecor position="gathering" />
       <Reveal className="placement placement--gather">
         <PaperCard>
           <Label>04 / At the water&apos;s edge</Label>
@@ -257,6 +258,52 @@ function Footer() {
 }
 
 export default function App() {
-  const [mode, setMode] = useState(null);
-  return <><CafeHeader open={setMode} /><main id="top"><WaterRiver /><JourneyRail /><Hero /><Visit /><MenuCatalog onPickup={() => setMode('pickup')} /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={setMode} /><Footer /></main><MobileNav open={setMode} />{mode && <CafeDialog key={mode} mode={mode} close={() => setMode(null)} />}</>;
+  const [panel, setPanel] = useState(null);
+  const [category, setCategory] = useState('breakfast');
+  const [notice, setNotice] = useState('');
+  const cart = useCart();
+
+  useEffect(() => {
+    if (!notice) return undefined;
+    const timer = setTimeout(() => setNotice(''), 2600);
+    return () => clearTimeout(timer);
+  }, [notice]);
+
+  const closePanel = () => setPanel(null);
+  const openMenu = () => setPanel({ type: 'menu' });
+  const openCart = () => setPanel({ type: 'cart' });
+  const openOrder = () => cart.itemCount ? openCart() : openMenu();
+  const chooseCategory = nextCategory => {
+    setCategory(nextCategory);
+    closePanel();
+    requestAnimationFrame(() => document.querySelector('#menu')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  };
+  const addItem = (item, needsOptions) => {
+    if (needsOptions) {
+      setPanel({ type: 'item', itemId: item.id });
+      return;
+    }
+    cart.add(item.id);
+    setNotice(`${item.name} added to your order.`);
+  };
+  const addConfiguredItem = (...details) => {
+    cart.add(...details);
+    const item = menuItems.find(entry => entry.id === details[0]);
+    setNotice(`${item?.name || 'Item'} added to your order.`);
+  };
+  const openService = mode => {
+    if (mode === 'pickup') openOrder();
+    else setPanel({ type: mode });
+  };
+
+  return <>
+    <CafeHeader openMenu={openMenu} openOrder={openOrder} openCart={openCart} cartCount={cart.itemCount} menuOpen={panel?.type === 'menu'} />
+    <main id="top"><WaterRiver /><JourneyRail /><Hero openMenu={openMenu} /><Visit /><MenuCatalog category={category} setCategory={setCategory} onAddItem={addItem} openCart={openCart} /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={openService} /><Footer /></main>
+    <MobileNav openMenu={openMenu} openOrder={openOrder} openCart={openCart} cartCount={cart.itemCount} />
+    <div className={`cart-toast ${notice ? 'cart-toast--visible' : ''}`} role="status" aria-live="polite">{notice}</div>
+    {panel?.type === 'menu' && <MenuDrawer close={closePanel} selectCategory={chooseCategory} />}
+    {panel?.type === 'item' && <ItemDialog itemId={panel.itemId} close={closePanel} add={addConfiguredItem} />}
+    {panel?.type === 'cart' && <CartDrawer cart={cart} close={closePanel} browseMenu={openMenu} />}
+    {['delivery', 'club', 'share'].includes(panel?.type) && <InfoDialog mode={panel.type} close={closePanel} />}
+  </>;
 }
