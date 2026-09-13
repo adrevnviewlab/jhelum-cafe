@@ -3,6 +3,10 @@
 .catalog-item--photographic { padding: 0; border: 1px solid #9b815245; border-radius: 12px; overflow: hidden; background: #fff8eb; box-shadow: 0 5px 18px #203b3608; transition: box-shadow .25s ease,transform .25s ease; }
 .catalog-photo { aspect-ratio: 3 / 2; overflow: hidden; background: #211c16; }
 .catalog-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 62%; transition: transform .5s ease; }
+.catalog-items--portrait .catalog-photo { aspect-ratio: 1; }
+.catalog-items--portrait .catalog-photo img { object-position: center; }
+.catalog-item--photographic .catalog-variants { grid-template-columns: minmax(0,1fr); gap: 10px; }
+.catalog-item--photographic .catalog-variants dt { color: #465848; }
 .catalog-item-body { min-width: 0; }
 .catalog-item--photographic .catalog-item-body { padding: 20px; }
 .catalog-item-body > p { font-size: .9375rem; line-height: 1.65; color: #465848; margin-top: 12px; }

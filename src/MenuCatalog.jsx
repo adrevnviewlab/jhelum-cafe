@@ -26,7 +26,7 @@ export default function MenuCatalog({ onPickup }) {
     {visible.length ? visible.map(section => <section className="catalog-section" key={section.id} aria-label={section.title}>
       <div className="catalog-section-heading"><h3>{section.title}</h3><p>{section.subtitle}</p></div>
       {section.note && <p className="catalog-note">{section.note}</p>}
-      <div className={`catalog-items ${section.id === 'breakfast' ? 'catalog-items--photographic' : ''}`}>{section.items.map(item => <article key={item.id} className={`catalog-item ${menuPhotos[item.id] ? 'catalog-item--photographic' : ''}`}>
+      <div className={`catalog-items catalog-items--photographic ${['breakfast', 'bakery'].includes(section.id) ? '' : 'catalog-items--portrait'}`}>{section.items.map(item => <article key={item.id} className={`catalog-item ${menuPhotos[item.id] ? 'catalog-item--photographic' : ''}`}>
         {menuPhotos[item.id] && <div className="catalog-photo"><img src={`/menu/${item.id}.webp`} alt={menuPhotos[item.id]} width="540" height="360" loading="lazy" decoding="async" /></div>}
         <div className="catalog-item-body">
         <div className="catalog-item-title"><h4>{item.name}</h4>{!item.variants && <span>{money(item.cents)}{item.unit && <small>{item.unit}</small>}</span>}</div>
