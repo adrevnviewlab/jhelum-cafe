@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import MenuCatalog from './MenuCatalog';
+import Icon from './Icon';
 import { cafe, crepeToppings, itemPrice, menuItems, money } from './menuData';
 import ExternalLink from './ExternalLink';
 
 const mapQuery = encodeURIComponent(cafe.address);
-const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}`;
 const directionsUrl = mode => `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}&travelmode=${mode}`;
 const parkingUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`parking near ${cafe.address}`)}`;
 
-export function Visit({ open }) {
+export function Visit() {
   const [showMap, setShowMap] = useState(false);
   return <section className="visit-strip" id="visit" tabIndex={-1} aria-labelledby="visit-title">
     <div><p className="label">A little closer to your table</p><h2 id="visit-title">Visit & hours</h2><p><strong>{cafe.hoursLabel}</strong><br />Brooklyn local time</p></div>
@@ -17,7 +17,7 @@ export function Visit({ open }) {
       <details><summary>Transit & walking directions</summary><p>Choose your starting point to see current transit routes, stops and walking directions to the cafe.</p><div className="arrival-links"><ExternalLink href={directionsUrl('transit')}>Plan a transit trip</ExternalLink><ExternalLink href={directionsUrl('walking')}>Walking directions</ExternalLink></div></details>
       <details><summary>Step-free travel & cafe access</summary><p>Check accessible stations and elevator status with the MTA before travelling. A walking route is not a guarantee of step-free access.</p><div className="arrival-links"><ExternalLink href="https://www.mta.info/accessibility">MTA accessible travel</ExternalLink><a href={cafe.phoneHref}>Call about entrance, seating & restroom access</a></div></details>
       <details><summary>Parking & drop-off</summary><p>Search nearby parking and check posted restrictions before leaving your car. Call the cafe to confirm any dedicated parking or a suitable drop-off point before relying on it.</p><div className="arrival-links"><ExternalLink href={parkingUrl}>Find nearby parking</ExternalLink><a href={cafe.phoneHref}>Ask about parking & drop-off</a></div></details>
-      <div className="utility-actions"><button onClick={() => open('menu')}>View menu</button><button onClick={() => setShowMap(!showMap)} aria-controls="visit-map" aria-expanded={showMap}>{showMap ? 'Hide map' : 'Explore map'}</button></div>
+      <div className="utility-actions"><a className="menu-anchor" href="#menu">View menu</a><button onClick={() => setShowMap(!showMap)} aria-controls="visit-map" aria-expanded={showMap}>{showMap ? 'Hide map' : 'Explore map'}</button></div>
     </div>
     {showMap && <iframe id="visit-map" className="visit-map" title="937 Coney Island Avenue, Brooklyn — cafe address" src={`https://maps.google.com/maps?q=${mapQuery}&output=embed`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />}
   </section>;
@@ -34,7 +34,7 @@ export function pickupSlots(now = new Date()) {
   });
 }
 
-export function CafeDialog({ mode, close, changeMode }) {
+export function CafeDialog({ mode, close }) {
   const ref = useRef(null);
   const [quantity, setQuantity] = useState(1);
   const [itemId, setItemId] = useState('brooklyn');
@@ -69,10 +69,10 @@ export function CafeDialog({ mode, close, changeMode }) {
     return () => { clearInterval(timer); document.removeEventListener('visibilitychange', refresh); };
   }, [mode]);
   useEffect(() => { if (slot && !slots.includes(slot)) { setSlot(''); setReviewed(false); } }, [slots, slot]);
-  const title = { menu: 'From our kitchen', pickup: 'Plan your pickup', delivery: 'Bring the table home', club: 'A place in the Jehlum Club', share: 'Good company, good chai' }[mode];
+  const title = { pickup: 'Plan your pickup', delivery: 'Bring the table home', club: 'A place in the Jehlum Club', share: 'Good company, good chai' }[mode];
   return <dialog ref={ref} className="cafe-dialog" aria-labelledby="dialog-title" onCancel={close} onClick={e => { if (e.target === ref.current) close(); }}>
-    <div className="dialog-shell"><button className="dialog-close" onClick={close} aria-label="Close dialog">×</button><p className="label">Jehlum Cafe / Brooklyn</p><h2 id="dialog-title">{title}</h2>
-    {mode === 'menu' && <><MenuCatalog compact /><button className="primary-action" onClick={() => changeMode('pickup')}>Plan a pickup ↗</button></>}
+    <div className="dialog-header"><p className="label">Jehlum Cafe / Brooklyn</p><button className="dialog-close" onClick={close} aria-label="Close dialog" autoFocus><Icon name="close" /></button></div>
+    <div className="dialog-shell"><h2 id="dialog-title">{title}</h2>
     {mode === 'pickup' && <form onSubmit={e => { e.preventDefault(); const current = new Date(); setNow(current); setReviewed(pickupSlots(current).includes(slot) && Number.isInteger(quantity) && quantity >= 1 && quantity <= 6); }} onChange={() => setReviewed(false)}>
       <p className="service-notice">Plan your order below, then call the cafe to confirm availability and pickup. This form does not send an order or reserve a time.</p>
       <label>Choose an item<select value={itemId} onChange={e => { setItemId(e.target.value); setVariantIndex(0); setModifierIds([]); }}>{menuItems.filter(item => item.cents != null).map(item => <option key={item.id} value={item.id}>{item.name} — {item.variants ? 'from ' : ''}{money(item.cents)}{item.unit ? ` ${item.unit}` : ''}</option>)}</select></label>
@@ -86,12 +86,12 @@ export function CafeDialog({ mode, close, changeMode }) {
       <div className="basket-total" role="status" aria-live="polite" aria-atomic="true"><span>Food subtotal · {quantity} × {money(priceCents)}</span><strong>{money(quantity * priceCents)}</strong></div><p className="utility-note">Estimate includes selected extras. Tax and any other fees are excluded; confirm the final total with the cafe before ordering. Items with unlisted prices are available to discuss by phone.</p>
       <button className="primary-action" disabled={!slots.length}>Review pickup plan</button>{reviewed && <p role="status" className="service-notice">Your plan: {quantity}{selectedItem.unit === 'per lb' ? ' lb of' : ' ×'} {selectedItem.name}{selectedVariant ? ` (${selectedVariant.label})` : ''}{selectedModifiers.length > 0 ? ` with ${selectedModifiers.map(modifier => modifier.label.toLowerCase()).join(' and ')} on each item` : ''}, today at {slot}. Food subtotal: {money(quantity * priceCents)}, before tax and any fees. No order has been sent and no payment has been taken.</p>}<a className="primary-action call-order" href={cafe.phoneHref}>Call to order · {cafe.phone}</a>
     </form>}
-    {mode === 'delivery' && <><p>Your cafe favourites, wherever you are.</p><p className="service-notice">Delivery is not available online yet. Delivery area, fees and ordering partner are awaiting confirmation.</p><button className="primary-action" onClick={() => changeMode('menu')}>Browse the menu</button></>}
+    {mode === 'delivery' && <><p>Your cafe favourites, wherever you are.</p><p className="service-notice">Delivery is not available online yet. Delivery area, fees and ordering partner are awaiting confirmation.</p><a className="primary-action call-order" href="#menu" onClick={close}>Browse the menu <Icon /></a></>}
     {mode === 'club' && <form onSubmit={e => { e.preventDefault(); setReviewed(true); }} onChange={() => setReviewed(false)}><p>Every sixth chai, ours. A small thank-you for making us part of your day.</p><p className="service-notice">Signup preview. Membership enrollment is not connected yet. Your details stay in this open form and are not saved or sent.</p><fieldset><legend>Preferred contact</legend>{['email', 'sms'].map(c => <label className="choice" key={c}><input type="radio" name="channel" checked={channel === c} onChange={() => { setChannel(c); setContact(''); }} />{c === 'email' ? 'Email' : 'SMS'}</label>)}</fieldset><label>{channel === 'email' ? 'Email address' : 'Mobile number'}<input required type={channel === 'email' ? 'email' : 'tel'} autoComplete={channel === 'email' ? 'email' : 'tel'} value={contact} pattern={channel === 'sms' ? '[+0-9 ()-]{7,20}' : undefined} onChange={e => setContact(e.target.value)} /></label><label className="choice"><input required type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} />I would like Jehlum Club updates by {channel === 'sms' ? 'SMS' : 'email'}.</label><button className="primary-action">Review signup details</button>{reviewed && <p role="status" className="service-notice">Details checked. Enrollment is not yet available; you have not been subscribed.</p>}</form>}
     {mode === 'share' && <><p>Send someone an invitation to slow down with you.</p><button className="primary-action" onClick={async () => { try { await navigator.clipboard.writeText(window.location.origin); setCopied(true); setError(''); } catch { setError('Copy the address below to share the cafe.'); } }}>{copied ? 'Link copied' : 'Copy cafe link'}</button><p role="status">{copied ? 'Ready to share with someone you love.' : error}</p><input aria-label="Cafe link" readOnly value={window.location.origin} onFocus={e => e.target.select()} /></>}
     </div></dialog>;
 }
 
 export function MobileNav({ open }) {
-  return <nav className="mobile-nav" aria-label="Quick cafe actions"><button onClick={() => open('menu')}>Menu</button><button onClick={() => open('pickup')}>Order online</button><a href="#visit">Get directions</a></nav>;
+  return <nav className="mobile-nav" aria-label="Quick cafe actions"><a href="#menu">Menu</a><button onClick={() => open('pickup')}>Order online</button><ExternalLink href={mapUrl}>Directions</ExternalLink></nav>;
 }

@@ -6,6 +6,7 @@ import CafeHeader from './CafeHeader';
 import Copyright from './Copyright';
 import { cafe } from './menuData';
 import WaterRiver from './water/WaterRiver';
+import Icon from './Icon';
 
 function MountainScene() {
   const { scrollYProgress } = useScroll();
@@ -29,11 +30,6 @@ function JourneyRail() {
       <span className="journey-rail__end">Brooklyn</span>
     </aside>
   );
-}
-
-function MountainEcho({ variant = "one" }) {
-  // This repeats the hero scenery as a texture; keep it out of the reading order.
-  return <div className={`mountain-echo mountain-echo--${variant}`} aria-hidden="true"><img src="/mountain-sunset.webp" alt="Sunset mountain valley and river, repeated as a background texture." loading="lazy" decoding="async" width="1783" height="882" /></div>;
 }
 
 function ScenicDecor({ type, position, caption }) {
@@ -70,10 +66,10 @@ function Label({ children, rust = false }) {
 }
 
 function ActionArrow() {
-  return <span className="action-arrow" aria-hidden="true">↗</span>;
+  return <span className="action-arrow" aria-hidden="true"><Icon /></span>;
 }
 
-function Hero({ open }) {
+function Hero() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const opacity = useTransform(scrollYProgress, [0, .62, 1], [1, 1, 0]);
@@ -87,7 +83,7 @@ function Hero({ open }) {
         <p className="hero-intro">Where the mountain river meets a generous table.</p>
         <p className="hero-sub">Inspired by Punjab.<br />At home in Brooklyn.<br />Breakfast, desi favourites<br />and a cup of chai.</p>
         <a href="#beginning" className="follow">Follow the water <span /></a>
-        <div className="utility-actions hero-actions"><button onClick={() => open('menu')}>Explore the menu</button><a className="visit-action" href="#visit">Plan your visit ↗</a></div>
+        <div className="utility-actions hero-actions"><a className="menu-anchor" href="#menu">Explore the menu <Icon /></a><a className="visit-action" href="#visit">Plan your visit <Icon /></a></div>
       </motion.div>
       <div className="hero-reeds hero-reeds--left" aria-hidden="true" />
       <div className="hero-reeds hero-reeds--right" aria-hidden="true" />
@@ -98,7 +94,6 @@ function Hero({ open }) {
 function Beginning() {
   return (
     <section id="beginning" tabIndex={-1} className="scene scene--story">
-      <MountainEcho variant="one" />
       <ScenicDecor type="greenery" position="story" />
       <Reveal className="placement placement--beginning">
         <PaperCard>
@@ -125,11 +120,10 @@ function Beginning() {
 function Kitchen() {
   return (
     <section className="scene scene--kitchen">
-      <MountainEcho variant="two" />
       <ScenicDecor type="chai" position="kitchen" caption="Morning chai / mountain air" />
       <Reveal className="placement placement--karahi">
         <motion.article className="menu-card" whileHover={{ y: -10, rotate: -.4 }} transition={{ type: "spring", stiffness: 180, damping: 18 }}>
-          <div className="featured-menu-panel"><span>Desi chaska</span><strong>A taste<br /><em>of home.</em></strong><a href="#menu">Explore the menu ↗</a></div>
+          <div className="featured-menu-panel"><span>Desi chaska</span><strong>A taste<br /><em>of home.</em></strong><a href="#menu">Explore the menu <Icon /></a></div>
           <div className="menu-copy">
             <Label rust>From the kitchen / 07</Label>
             <h3>Samosa chaat</h3>
@@ -153,7 +147,6 @@ function Kitchen() {
 function PunjabInterlude() {
   return (
     <section className="scene scene--punjab">
-      <MountainEcho variant="three" />
       <ScenicDecor type="greenery" position="punjab" />
       <div className="field-ribbons" aria-hidden="true"><i /><i /><i /><i /><i /></div>
       <Reveal className="placement placement--fivewaters">
@@ -186,7 +179,6 @@ function PunjabInterlude() {
 function Gathering() {
   return (
     <section className="scene scene--gathering">
-      <MountainEcho variant="four" />
       <ScenicDecor type="chai" position="gathering" caption="Two cups / no hurry" />
       <Reveal className="placement placement--gather">
         <PaperCard>
@@ -266,5 +258,5 @@ function Footer() {
 
 export default function App() {
   const [mode, setMode] = useState(null);
-  return <><CafeHeader open={setMode} /><main id="top"><WaterRiver /><JourneyRail /><Hero open={setMode} /><Visit open={setMode} /><MenuCatalog /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={setMode} /><Footer /></main><MobileNav open={setMode} />{mode && <CafeDialog key={mode} mode={mode} close={() => setMode(null)} changeMode={setMode} />}</>;
+  return <><CafeHeader open={setMode} /><main id="top"><WaterRiver /><JourneyRail /><Hero /><Visit /><MenuCatalog onPickup={() => setMode('pickup')} /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={setMode} /><Footer /></main><MobileNav open={setMode} />{mode && <CafeDialog key={mode} mode={mode} close={() => setMode(null)} />}</>;
 }

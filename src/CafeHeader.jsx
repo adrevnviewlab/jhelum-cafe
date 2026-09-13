@@ -1,3 +1,5 @@
+import Icon from './Icon';
+
 export default function CafeHeader({ open }) {
   return <>
     <a className="skip-link" href="#menu">Skip to menu</a>
@@ -12,10 +14,10 @@ export default function CafeHeader({ open }) {
           <path d="M25 27c-11 6 11 7 0 13s-8 8-4 10" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
           <path d="M10 50h5m13 0h10" stroke="currentColor" strokeWidth="1" />
         </svg>
-        <span><strong>Jehlum</strong><small>C A F E <i /> B R O O K L Y N</small></span>
+        <span><strong>Jehlum</strong><small>Cafe <i aria-hidden="true" /> Brooklyn</small></span>
       </a>
       <nav className="header-nav header-nav--right" aria-label="Plan your visit">
-        <a href="#visit">Visit us</a><button onClick={() => open('pickup')}>Order online <span aria-hidden="true">↗</span></button>
+        <a href="#visit">Visit us</a><button onClick={() => open('pickup')}>Order online <Icon /></button>
       </nav>
     </header>
   </>;
