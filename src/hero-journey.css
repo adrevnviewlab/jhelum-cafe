@@ -1,0 +1,106 @@
+.hero-journey {
+  width: min(100%, 560px);
+  margin: .15rem 0 0;
+}
+
+.hero-journey__map {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 10px 22px #04141399);
+}
+
+.hero-journey__place {
+  fill: #fff9ec;
+  font-size: 13px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.hero-journey__place--small {
+  font-size: 10px;
+  letter-spacing: .22em;
+  fill: #e3bd7b;
+}
+
+.hero-journey__flow {
+  stroke-dasharray: 7 16;
+  animation: hero-journey-flow 2.6s linear infinite;
+}
+
+.hero-journey__beats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-journey__beat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #fff9ec;
+  text-decoration: none;
+}
+
+.hero-journey__mark {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid #e3bd7b99;
+  border-radius: 50%;
+  color: #e3bd7b;
+  background: #04141333;
+  box-shadow: 0 6px 18px #04141355;
+}
+
+.hero-journey__mark svg {
+  width: 22px;
+  height: 22px;
+}
+
+.hero-journey__beat span:last-child {
+  font-size: var(--type-floor);
+  letter-spacing: .08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: 0 2px 12px #041413d0;
+}
+
+.hero-journey a.hero-journey__beat:hover .hero-journey__mark,
+.hero-journey a.hero-journey__beat:focus-visible .hero-journey__mark {
+  background: #e3bd7b22;
+  border-color: #f0cf95;
+}
+
+@keyframes hero-journey-flow {
+  to { stroke-dashoffset: -46; }
+}
+
+.hero-journey__beat {
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+@media (max-width: 620px) {
+  .hero-journey__mark { width: 40px; height: 40px; }
+  .hero-journey__mark svg { width: 19px; height: 19px; }
+  .hero-journey__beat span:last-child { letter-spacing: .06em; font-size: var(--type-floor); }
+  .hero-journey__beats { gap: 4px; margin-top: 12px; }
+}
+
+@media (max-width: 480px) {
+  .hero-journey__beats { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 12px; }
+  .hero-journey__place { font-size: 11px; letter-spacing: .18em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-journey__flow { animation: none; }
+}

@@ -35,7 +35,7 @@ export const menuSections = [
     item('pakora', 'Pakora', 799, '', { unit: 'per lb' }),
     item('kheer', 'Kheer', 200, '', { unit: 'per piece' }), item('rasmalai', 'Rasmalai', null),
   ] },
-  { id: 'chai', title: 'Chai', subtitle: 'Stay a little longer.', note: 'Chai prices are not listed on the printed menu. Please ask the cafe.', items: [
+  { id: 'chai', title: 'Chai', subtitle: 'Stay a little longer.', note: 'Ask the cafe for today’s chai prices. Each cup below is call for price.', items: [
     item('adeni', 'Adeni Tea', null), item('cardamom', 'Special Cardamom Chai', null),
     item('masala', 'Masala Chai', null), item('karak', 'Karak Chai (Taiz Patti)', null),
     item('doodh', 'Special Doodh Pati Chai', null),

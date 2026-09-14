@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Jehlum Cafe">
+  <rect width="512" height="512" fill="#173b36"/>
+  <g fill="none" stroke="#f2eddf" stroke-linecap="round" stroke-linejoin="round" transform="translate(92 64) scale(6.85)">
+    <path d="M5 47V23a19 19 0 0 1 38 0v24" stroke-width="1.15"/>
+    <path d="m10 27 9-12 6 8 5-6 8 10M10 30h9m12 0h7" stroke-width="1.2"/>
+    <path d="M25 27c-11 6 11 7 0 13s-8 8-4 10" stroke-width="2.2"/>
+    <path d="M10 50h5m13 0h10" stroke-width="1"/>
+  </g>
+</svg>

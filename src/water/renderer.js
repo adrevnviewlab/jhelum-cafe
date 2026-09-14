@@ -20,11 +20,15 @@ export function createWaterRenderer(canvas, main, options = {}) {
     stopped=true; cancelAnimationFrame(raf); observer?.disconnect();
     window.removeEventListener('resize',invalidate);
     window.removeEventListener('scroll',wake);
+    window.visualViewport?.removeEventListener('resize',invalidate);
     document.removeEventListener('visibilitychange',visibility);
     reduced.removeEventListener('change',wake);
     resources.reverse().forEach(dispose=>dispose());
   };
-  function invalidate(){ dirty=true; wake(); }
+  function invalidate(){
+    if ((window.visualViewport?.scale || 1) > 1.01) { wake(); return; }
+    dirty=true; wake();
+  }
   function wake(){ if(!stopped && !document.hidden && !raf) { frameTime=0; raf=requestAnimationFrame(frame); } }
   function visibility(){ if(document.hidden){cancelAnimationFrame(raf);raf=0;frameTime=0;} else wake(); }
 
@@ -133,6 +137,7 @@ export function createWaterRenderer(canvas, main, options = {}) {
     observer=new ResizeObserver(invalidate); observer.observe(main);
     observer.observe(main.querySelector('.hero')); observer.observe(main.querySelector('.footer'));
     window.addEventListener('resize',invalidate); window.addEventListener('scroll',wake,{passive:true});
+    window.visualViewport?.addEventListener('resize',invalidate);
     document.addEventListener('visibilitychange',visibility); reduced.addEventListener('change',wake);
     render(); wake(); return destroy;
   } catch(error) {destroy();throw error;}

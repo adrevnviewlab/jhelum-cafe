@@ -3,17 +3,17 @@ html { scroll-padding-top: 18px; }
 body { padding-top: 0; }
 .skip-link { position: fixed; top: 10px; left: 16px; z-index: 100; padding: 12px 20px; background: #214f58; color: #fff; transform: translateY(-150%); }
 .skip-link:focus { transform: none; }
-.cafe-header { position: relative; height: var(--header-height); z-index: 40; display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; gap: 24px; padding-inline: clamp(22px,5vw,90px); background: rgba(249,245,233,.9); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-bottom: 1px solid #214f5840; box-shadow: 0 4px 24px #163b4308; }
+.cafe-header { position: relative; height: var(--header-height); z-index: 40; display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; gap: 24px; padding-inline: clamp(22px,5vw,90px); }
 .header-nav { display: flex; align-items: center; gap: 28px; }
 .header-nav--right { justify-content: flex-end; }
-.header-nav a { color: #294c4e; text-decoration: none; font-size: 11px; text-transform: uppercase; letter-spacing: .13em; padding-block: 14px; white-space: nowrap; }
+.header-nav a { text-decoration: none; font-size: var(--type-floor); text-transform: uppercase; letter-spacing: var(--track-ui); padding-block: 14px; white-space: nowrap; }
 .header-nav a:hover { color: #975d31; }
 .header-nav button { min-height: 43px; border: 1px solid #214f58; background: #214f58; border-radius: 9999px; color: #fff8e8; padding: 11px 22px; cursor: pointer; font-size: 11px; white-space: nowrap; }
 .header-nav button span { margin-left: 10px; }
 .cafe-wordmark { display: flex; gap: 11px; align-items: center; text-decoration: none; color: #1c454b; }
 .brand-seal { width: 40px; height: 49px; flex-shrink: 0; }
 .cafe-wordmark strong { display: block; font: 400 34px/.98 Georgia,serif; letter-spacing: -.05em; }
-.cafe-wordmark small { display: flex; align-items: center; gap: 6px; font-size: 6px; line-height: 1; margin-top: 9px; white-space: nowrap; }
+.cafe-wordmark small { display: flex; align-items: center; gap: 6px; font-size: var(--type-floor); line-height: 1.4; margin-top: 6px; white-space: nowrap; }
 .cafe-wordmark i { width: 12px; height: 1px; background: #9f8559; }
 main { background-image: radial-gradient(ellipse at 15% 22%,#d3b77a24,transparent 28%),radial-gradient(ellipse at 85% 60%,#7c9a8226,transparent 32%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='950' height='760' viewBox='0 0 950 760'%3E%3Cg fill='none' stroke='%237a927d' stroke-opacity='.12' stroke-width='.8'%3E%3Cpath d='M-80 420C120 150 310 570 560 310S910 280 1040 100M-80 438C120 168 310 588 560 328S910 298 1040 118M-80 456C120 186 310 606 560 346S910 316 1040 136M-80 474C120 204 310 624 560 364S910 334 1040 154M-80 492C120 222 310 642 560 382S910 352 1040 172'/%3E%3C/g%3E%3C/svg%3E"); }
 .hero { min-height: 760px; min-height: max(720px,92svh); }
@@ -31,12 +31,12 @@ main { background-image: radial-gradient(ellipse at 15% 22%,#d3b77a24,transparen
 .catalog-item { padding: 19px 0; }
 .catalog-count { margin-bottom: 18px; }
 .catalog-toolbar input { border-radius: 12px; }
-.utility-actions button,.primary-action,.catalog-toolbar button,.header-nav button { border-radius: 9999px; transition: transform .22s ease,background .22s ease,color .22s ease,border-color .22s ease,box-shadow .22s ease; }
+.utility-actions button,.primary-action,.catalog-toolbar button,.header-nav button,.header-nav .header-order,.header-nav .header-cart { border-radius: 9999px; transition: transform .22s ease,background .22s ease,color .22s ease,border-color .22s ease,box-shadow .22s ease; }
 .utility-actions button { font-size: 13px; padding-inline: 20px; }
 .utility-actions button + button { background: transparent; color: #214f58; border-color: #214f587d; }
 .utility-actions button + button:hover { background: #214f58; color: #fff8e8; }
 .catalog-toolbar button { padding-inline: 17px; }
-@media(hover:hover) { .utility-actions button:hover,.primary-action:not(:disabled):hover,.catalog-toolbar button:hover,.header-nav button:hover { transform: translateY(-2px); box-shadow: 0 7px 16px #214f581b; } }
+@media(hover:hover) { .utility-actions button:hover,.primary-action:not(:disabled):hover,.catalog-toolbar button:hover,.header-nav button:hover,.header-nav .header-order:hover,.header-nav .header-cart:hover { transform: translateY(-2px); box-shadow: 0 7px 16px #214f581b; } }
 .utility-actions button:active,.primary-action:active,.catalog-toolbar button:active,.header-nav button:active { transform: translateY(0); }
 .scene:is(.scene--story,.scene--kitchen,.scene--gathering,.scene--punjab) { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: start; gap: 34px 9%; min-height: 0; padding: 48px max(8%,calc((100% - 1150px)/2)) 56px; }
 .scene:is(.scene--story,.scene--kitchen,.scene--gathering,.scene--punjab) > .placement { position: relative; inset: auto; width: min(100%,440px); justify-self: center; }
@@ -64,7 +64,7 @@ main { background-image: radial-gradient(ellipse at 15% 22%,#d3b77a24,transparen
  :root { --header-height: 74px; }
  .cafe-header { gap: 10px; padding-inline: 20px; }
  .header-nav { gap: 16px; }
- .header-nav--right button { display: none; }
+ .header-nav--right button,.header-nav--right .header-order,.header-nav--right .header-cart { display: none; }
  .hero { min-height: max(730px,90svh); }
  .hero h1 { font-size: clamp(5rem,20vw,8rem); line-height: .85; }
  .hero-copy { padding-top: 65px; }
@@ -97,11 +97,11 @@ main { background-image: radial-gradient(ellipse at 15% 22%,#d3b77a24,transparen
 @media(max-width:620px) {
  .header-story { display: none; }
  .cafe-header { padding-inline: 16px; }
- .header-nav a { font-size: 10px; letter-spacing: .06em; }
+ .header-nav a { font-size: var(--type-floor); letter-spacing: var(--track-ui); }
  .cafe-wordmark { gap: 7px; }
  .brand-seal { width: 29px; height: 39px; }
  .cafe-wordmark strong { font-size: 28px; }
- .cafe-wordmark small { font-size: 5px; gap: 4px; }
+ .cafe-wordmark small { font-size: var(--type-floor); gap: 4px; }
  .cafe-wordmark i { width: 7px; }
  .scene:is(.scene--story,.scene--kitchen,.scene--gathering,.scene--punjab) { grid-template-columns: minmax(0,1fr); gap: 22px; padding-block: 24px; }
  .scene--punjab .placement--fivewaters { grid-row: auto; }

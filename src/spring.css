@@ -1,0 +1,57 @@
+button.spring-press,a.spring-press,article.spring-card,a.spring-card {
+  --spring-ring: #e3bd7b;
+  transition-property: color, background-color, background, border-color, box-shadow, filter, outline-color, opacity;
+}
+article.spring-card,a.spring-card { isolation: isolate; }
+
+.order-summary { transition: border-color .28s ease, box-shadow .28s ease; }
+
+@media(hover:hover) {
+  button.spring-press:hover,a.spring-press:hover {
+    border-color: var(--spring-ring);
+    box-shadow: 0 0 0 2px #dfb97766, 0 8px 18px #10232622;
+  }
+  button.spring-press[aria-pressed=true]:hover {
+    border-color: #f1d395;
+    box-shadow: inset 0 -3px 0 #dbb677, 0 0 0 2px #dfb97755;
+  }
+  article.spring-card:hover,a.spring-card:hover {
+    border-color: var(--spring-ring);
+    box-shadow: 0 0 0 1px #e3bd7b, 0 0 0 5px #e3bd7b33, inset 0 1px 0 #fffaf08a, 0 22px 48px #04171936;
+  }
+  .paper-card--dark.spring-card:hover {
+    border-color: #efd09a;
+    box-shadow: 0 0 0 1px #e8c98a, 0 0 0 5px #e3bd7b40, 0 22px 48px #04171955;
+  }
+  .spring-card:hover::before { border-color: #d4ae6b66; }
+  .menu-invite-list a.spring-card:hover {
+    border-color: #e3bd7b;
+    box-shadow: 0 0 0 1px #e3bd7b, 0 0 0 4px #e3bd7b2e, 0 14px 28px #203b361a;
+    transform: none;
+  }
+  .catalog-item--photographic.spring-card:hover { transform: none; }
+  .order-line.spring-card:hover {
+    box-shadow: 0 0 0 1px #e3bd7b88, 0 0 0 4px #e3bd7b24;
+    border-radius: 14px;
+  }
+  .home-action-list button.spring-press:hover {
+    border-color: #dfb97766;
+    box-shadow: inset 0 0 0 1px #dfb97780, 0 8px 20px #061d2624;
+  }
+  .header-nav a.header-order.spring-press:hover,
+  .header-nav a.header-cart.spring-press:hover {
+    border-color: #e8c98a;
+    box-shadow: 0 0 0 2px #dfb97766, 0 8px 18px #10232622;
+  }
+  .dialog-close.spring-press:hover { box-shadow: 0 0 0 2px #dfb97766; }
+  .quantity-stepper button.spring-press:hover { box-shadow: none; }
+  .mobile-nav a.spring-press:hover { box-shadow: inset 0 0 0 1px #d4ae6b, 0 0 0 2px #dfb97755; }
+  .order-summary:hover {
+    border-color: #e3bd7b;
+    box-shadow: 0 0 0 1px #e3bd7b, 0 0 0 5px #e3bd7b2e, 0 16px 40px #173b3610;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  button.spring-press,a.spring-press,article.spring-card,a.spring-card { transition: none; }
+}

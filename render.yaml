@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: jhelum-cafe
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /sw.js
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate

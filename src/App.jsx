@@ -1,14 +1,27 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { InfoDialog, MobileNav, Visit } from './CafeUtility';
-import { CartDrawer, ItemDialog, MenuDrawer } from './CommercePanels';
-import MenuCatalog from './MenuCatalog';
+import { ConfirmDialog, ItemDialog } from './CommercePanels';
+import MenuPage, { MenuInvite } from './MenuPage';
+import CartPage from './CartPage';
+import CheckoutPage from './CheckoutPage';
+import AdminBoard from './AdminBoard';
+import TrackPage from './TrackPage';
+import DriverApp from './DriverApp';
+import { HomeDirect } from './DirectHome';
+import SeoJsonLd from './SeoJsonLd';
 import CafeHeader from './CafeHeader';
 import Copyright from './Copyright';
-import { cafe, menuItems } from './menuData';
+import { cafe } from './menuData';
+import { setFulfillment } from './lib/fulfillment';
+import { track } from './lib/analytics';
+import { useMenu } from './MenuProvider';
 import WaterRiver from './water/WaterRiver';
 import Icon from './Icon';
+import HeroJourney from './HeroJourney';
 import useCart from './useCart';
+import useCafeRoute, { directHref } from './useCafeRoute';
+import { SpringButton, SpringCard } from './Spring';
 
 function MountainScene() {
   const { scrollYProgress } = useScroll();
@@ -60,7 +73,7 @@ function Reveal({ className = "", children }) {
 }
 
 function PaperCard({ className = "", dark = false, children }) {
-  return <article className={`paper-card ${dark ? "paper-card--dark" : ""} ${className}`}>{children}<i className="corner-mark" /></article>;
+  return <SpringCard className={`paper-card ${dark ? "paper-card--dark" : ""} ${className}`}>{children}<i className="corner-mark" /></SpringCard>;
 }
 
 function Label({ children, rust = false }) {
@@ -71,7 +84,7 @@ function ActionArrow() {
   return <span className="action-arrow" aria-hidden="true"><Icon /></span>;
 }
 
-function Hero({ openMenu }) {
+function Hero({ cartCount }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const opacity = useTransform(scrollYProgress, [0, .62, 1], [1, 1, 0]);
@@ -80,12 +93,18 @@ function Hero({ openMenu }) {
     <section ref={ref} className="hero scene">
       <MountainScene />
       <motion.div className="hero-copy" style={{ opacity, y }}>
-        <Label>A mountain kitchen / since 2024</Label>
+        <Label>Jhelum Direct / Brooklyn</Label>
         <h1 className="brand-title"><span>Jehlum</span><em>Cafe</em></h1>
-        <p className="hero-intro">Where the mountain river meets a generous table.</p>
-        <p className="hero-sub">Inspired by Punjab.<br />At home in Brooklyn.<br />Breakfast, desi favourites<br />and a cup of chai.</p>
-        <a href="#beginning" className="follow">Follow the water <span /></a>
-        <div className="utility-actions hero-actions"><button type="button" className="menu-anchor" onClick={openMenu}>Explore the menu <Icon /></button><a className="visit-action" href="#visit">Plan your visit <Icon /></a></div>
+        <p className="hero-intro">A taste of Jhelum in Brooklyn. Order direct from the cafe.</p>
+        <HeroJourney />
+        <div className="direct-hero-modes" role="group" aria-label="Pickup or delivery">
+          <SpringButton type="button" className="menu-anchor" onClick={() => { setFulfillment('pickup'); window.location.hash = directHref(cartCount).slice(1); }}>Pickup</SpringButton>
+          <SpringButton type="button" className="visit-action" onClick={() => { setFulfillment('delivery'); window.location.hash = 'direct'; }}>Delivery</SpringButton>
+        </div>
+        <div className="utility-actions hero-actions">
+          <SpringButton as="a" className="menu-anchor" href={directHref(cartCount)}>Order Direct <Icon /></SpringButton>
+          <SpringButton as="a" className="visit-action" href="#menu">View menu <Icon /></SpringButton>
+        </div>
       </motion.div>
       <div className="hero-reeds hero-reeds--left" aria-hidden="true" />
       <div className="hero-reeds hero-reeds--right" aria-hidden="true" />
@@ -124,7 +143,7 @@ function Kitchen() {
     <section className="scene scene--kitchen">
       <ScenicDecor position="kitchen" />
       <Reveal className="placement placement--karahi">
-        <motion.article className="menu-card" whileHover={{ y: -10, rotate: -.4 }} transition={{ type: "spring", stiffness: 180, damping: 18 }}>
+        <SpringCard className="menu-card" hover={{ y: -10, rotate: -.4, scale: 1.014 }}>
           <div className="featured-menu-panel"><span>Desi chaska</span><strong>A taste<br /><em>of home.</em></strong><a href="#menu">Explore the menu <Icon /></a></div>
           <div className="menu-copy">
             <Label rust>From the kitchen / 07</Label>
@@ -132,7 +151,7 @@ function Kitchen() {
             <p>A desi favourite,<br />for a little afternoon comfort.</p>
             <div className="price"><strong>$5.99</strong><span>Desi chaska</span></div>
           </div>
-        </motion.article>
+        </SpringCard>
       </Reveal>
       <Reveal className="placement placement--crossing">
         <PaperCard dark>
@@ -190,24 +209,23 @@ function Gathering() {
         </PaperCard>
       </Reveal>
       <Reveal className="placement placement--chai">
-        <motion.article className="image-card" whileHover={{ y: -9, rotate: .4 }}>
+        <SpringCard className="image-card" hover={{ y: -9, rotate: .4, scale: 1.014 }}>
           <img src="/chai.jpg" alt="Chai and paratha on a cafe table" loading="lazy" decoding="async" width="640" height="420" />
           <div>
             <Label rust>The everyday / 11</Label>
             <h3>Chai, slowly</h3>
             <p>Cardamom, steam, and<br />nowhere else to be.</p>
           </div>
-        </motion.article>
+        </SpringCard>
       </Reveal>
     </section>
   );
 }
 
 const orderOptions = [
-  ["Pickup", "A considered meal, wherever the evening takes you.", "pickup"],
-  ["Delivery", "Explore dining at home.", "delivery"],
-  ["Jehlum Club", "For those who make a ritual of returning.", "club"],
-  ["Share a table", "An invitation is always a good beginning.", "share"],
+  ["Jhelum Direct", "Pay on the site. Pickup or free qualifying delivery.", "direct"],
+  ["Visit us", "Hours, directions, and how to arrive.", "visit"],
+  ["Share a table", "Copy a link and invite someone along.", "share"],
 ];
 
 function TakeHome({ open }) {
@@ -224,12 +242,12 @@ function TakeHome({ open }) {
           <p className="home-services-label">Make an evening of it</p>
           <div className="home-action-list">
             {orderOptions.map(([title, sub, mode], index) => (
-              <button className="action-card" type="button" key={title} onClick={() => open(mode)}>
+              <SpringButton className="action-card" type="button" key={title} onClick={() => open(mode)} hover={{ scale: 1.018, x: 6 }} tap={{ scale: 0.985 }}>
                 <span className="home-action-number">0{index + 1}</span><span className="home-action-copy"><strong>{title}</strong><span>{sub}</span></span><ActionArrow />
-              </button>
+              </SpringButton>
             ))}
           </div>
-          <p className="home-service-note">Explore our menu, plan your visit, or invite someone along.</p>
+          <p className="home-service-note">Order through Jhelum Direct, come sit with us, or send someone a link.</p>
         </div>
       </Reveal>
       <div className="home-colophon"><span>The last bend</span><p>Every good table has a story.<br />There is room for yours.</p><span>With warmth, Jehlum</span></div>
@@ -248,7 +266,7 @@ function Footer() {
       <Reveal className="footer-inner">
         <Label rust>The river continues</Label>
         <h2>Jehlum Cafe</h2>
-        <a className="action-card" href="#visit"><span>Come sit by the water</span><ActionArrow /></a>
+        <SpringButton as="a" className="action-card" href="#visit"><span>Come sit by the water</span><ActionArrow /></SpringButton>
         <p className="footer-hours"><strong>{cafe.hoursLabel}</strong><span>Brooklyn local time</span></p>
         <p className="footer-address">{cafe.address}</p>
         <Copyright />
@@ -258,10 +276,12 @@ function Footer() {
 }
 
 export default function App() {
+  const route = useCafeRoute();
+  const menu = useMenu();
   const [panel, setPanel] = useState(null);
-  const [category, setCategory] = useState('breakfast');
+  const [category, setCategory] = useState('all');
   const [notice, setNotice] = useState('');
-  const cart = useCart();
+  const cart = useCart(menu.items);
 
   useEffect(() => {
     if (!notice) return undefined;
@@ -269,15 +289,43 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [notice]);
 
+  useEffect(() => {
+    document.title = {
+      menu: 'Menu — Jehlum Cafe',
+      cart: 'Your order — Jehlum Cafe',
+      checkout: 'Checkout — Jhelum Direct',
+      admin: 'Kitchen — Jhelum Direct',
+      track: 'Track order — Jhelum Direct',
+      driver: 'Driver — Jhelum Direct',
+      home: 'Jehlum Cafe — Jhelum Direct',
+    }[route.page];
+  }, [route.page]);
+
+  useEffect(() => {
+    if (route.page === 'menu' && route.category) setCategory(route.category);
+  }, [route.page, route.category]);
+
+  const previousPage = useRef(null);
+  useEffect(() => {
+    const movedPages = previousPage.current && previousPage.current !== route.page;
+    previousPage.current = route.page;
+    if (route.page !== 'home') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      if (movedPages) {
+        const heading = document.querySelector('main h1');
+        heading?.setAttribute('tabIndex', '-1');
+        heading?.focus({ preventScroll: true });
+      }
+      return;
+    }
+    if (route.section && route.section !== 'top') {
+      requestAnimationFrame(() => document.getElementById(route.section)?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      return;
+    }
+    if (movedPages) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [route.page, route.section]);
+
   const closePanel = () => setPanel(null);
-  const openMenu = () => setPanel({ type: 'menu' });
-  const openCart = () => setPanel({ type: 'cart' });
-  const openOrder = () => cart.itemCount ? openCart() : openMenu();
-  const chooseCategory = nextCategory => {
-    setCategory(nextCategory);
-    closePanel();
-    requestAnimationFrame(() => document.querySelector('#menu')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
-  };
   const addItem = (item, needsOptions) => {
     if (needsOptions) {
       setPanel({ type: 'item', itemId: item.id });
@@ -285,25 +333,38 @@ export default function App() {
     }
     cart.add(item.id);
     setNotice(`${item.name} added to your order.`);
+    track('add_to_cart', { item_id: item.id, value: (item.cents || 0) / 100, currency: 'USD' });
   };
   const addConfiguredItem = (...details) => {
     cart.add(...details);
-    const item = menuItems.find(entry => entry.id === details[0]);
+    const item = menu.items.find(entry => entry.id === details[0]);
     setNotice(`${item?.name || 'Item'} added to your order.`);
+    track('add_to_cart', { item_id: details[0], currency: 'USD' });
   };
   const openService = mode => {
-    if (mode === 'pickup') openOrder();
+    if (mode === 'direct' || mode === 'pickup') window.location.hash = cart.itemCount ? 'checkout' : 'menu';
+    else if (mode === 'visit') window.location.hash = 'visit';
     else setPanel({ type: mode });
   };
 
+  const inner = {
+    menu: <MenuPage category={category} setCategory={setCategory} onAddItem={addItem} cartCount={cart.itemCount} />,
+    cart: <CartPage cart={cart} onClear={() => setPanel({ type: 'confirm-clear' })} />,
+    checkout: <CheckoutPage cart={cart} settings={menu.settings} />,
+    admin: <AdminBoard tab={route.category} />,
+    track: <TrackPage token={route.token} />,
+    driver: <DriverApp orderId={route.category} />,
+  }[route.page];
+
   return <>
-    <CafeHeader openMenu={openMenu} openOrder={openOrder} openCart={openCart} cartCount={cart.itemCount} menuOpen={panel?.type === 'menu'} />
-    <main id="top"><WaterRiver /><JourneyRail /><Hero openMenu={openMenu} /><Visit /><MenuCatalog category={category} setCategory={setCategory} onAddItem={addItem} openCart={openCart} /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={openService} /><Footer /></main>
-    <MobileNav openMenu={openMenu} openOrder={openOrder} openCart={openCart} cartCount={cart.itemCount} />
+    <SeoJsonLd settings={menu.settings} sections={menu.sections} />
+    <CafeHeader page={route.page} cartCount={cart.itemCount} />
+    {route.page === 'home' ? <main id="top"><WaterRiver /><JourneyRail /><Hero cartCount={cart.itemCount} /><Visit /><HomeDirect sections={menu.sections} items={menu.items} onAdd={addItem} /><MenuInvite onAdd={addItem} /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={openService} /><Footer /></main>
+      : <main id="top" className={`cafe-page cafe-page--${route.page}`}>{inner}</main>}
+    <MobileNav page={route.page} cartCount={cart.itemCount} />
     <div className={`cart-toast ${notice ? 'cart-toast--visible' : ''}`} role="status" aria-live="polite">{notice}</div>
-    {panel?.type === 'menu' && <MenuDrawer close={closePanel} selectCategory={chooseCategory} />}
     {panel?.type === 'item' && <ItemDialog itemId={panel.itemId} close={closePanel} add={addConfiguredItem} />}
-    {panel?.type === 'cart' && <CartDrawer cart={cart} close={closePanel} browseMenu={openMenu} />}
-    {['delivery', 'club', 'share'].includes(panel?.type) && <InfoDialog mode={panel.type} close={closePanel} />}
+    {panel?.type === 'confirm-clear' && <ConfirmDialog title="Clear this order?" message="This removes every item saved on this device. You can still browse the menu and start again." confirmLabel="Clear order" close={closePanel} onConfirm={cart.clear} />}
+    {panel?.type === 'share' && <InfoDialog close={closePanel} />}
   </>;
 }

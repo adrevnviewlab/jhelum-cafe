@@ -20,7 +20,7 @@ function reducer(lines, action) {
   return lines;
 }
 
-export default function useCart() {
+export default function useCart(catalog) {
   const [lines, dispatch] = useReducer(reducer, undefined, loadCart);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function useCart() {
     }
   }, [lines]);
 
-  const totals = useMemo(() => cartTotals(lines), [lines]);
+  const totals = useMemo(() => cartTotals(lines, catalog), [lines, catalog]);
   return {
     lines,
     ...totals,

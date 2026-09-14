@@ -1,0 +1,18 @@
+/* Shared palette, type floor, and tap size. Later sheets may restyle
+   components, but they should read these variables instead of new hex. */
+:root {
+  --read-dark: #102b28;
+  --read-paper: #f5ead5;
+  --read-ink: #203b36;
+  --read-muted: #465848;
+  --read-light: #fff9ec;
+  --read-gold: #e3bd7b;
+  --read-soft: #cbd6c8;
+  --type-floor: 12px;
+  --track-ui: .08em;
+  --track-display: -.02em;
+  --tap: 44px;
+  --header-bg: var(--read-dark);
+  --header-ink: var(--read-light);
+  --header-line: #d4ae6b;
+}

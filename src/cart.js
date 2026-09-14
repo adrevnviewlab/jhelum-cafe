@@ -35,27 +35,28 @@ export function updateCartLine(lines, key, quantity) {
   return lines.map(line => line.key === key ? { ...line, quantity: safeQuantity } : line);
 }
 
-export function getCartLineDetails(line) {
-  const item = menuItems.find(entry => entry.id === line.itemId);
+export function getCartLineDetails(line, catalog = menuItems) {
+  const item = catalog.find(entry => entry.id === line.itemId);
   if (!item) return null;
+  const modifiers = item.modifiers || [];
   const variantIndex = item.variants?.[line.variantIndex] ? line.variantIndex : 0;
   const modifierIds = normalizeModifierIds(line.modifierIds)
-    .filter(id => item.modifiers.some(modifier => modifier.id === id));
-  const unitCents = itemPrice(item, variantIndex, modifierIds);
+    .filter(id => modifiers.some(modifier => modifier.id === id));
+  const unitCents = itemPrice({ ...item, modifiers }, variantIndex, modifierIds);
   if (unitCents == null) return null;
   return {
     ...line,
-    item,
+    item: { ...item, modifiers },
     variantIndex,
     variant: item.variants?.[variantIndex],
-    modifiers: item.modifiers.filter(modifier => modifierIds.includes(modifier.id)),
+    modifiers: modifiers.filter(modifier => modifierIds.includes(modifier.id)),
     unitCents,
     totalCents: unitCents * line.quantity,
   };
 }
 
-export function cartTotals(lines) {
-  const details = lines.map(getCartLineDetails).filter(Boolean);
+export function cartTotals(lines, catalog = menuItems) {
+  const details = lines.map(line => getCartLineDetails(line, catalog)).filter(Boolean);
   return {
     details,
     itemCount: details.reduce((sum, line) => sum + line.quantity, 0),
@@ -63,8 +64,8 @@ export function cartTotals(lines) {
   };
 }
 
-export function orderSummary(lines, pickupTime = '') {
-  const { details, subtotalCents } = cartTotals(lines);
+export function orderSummary(lines, pickupTime = '', catalog = menuItems) {
+  const { details, subtotalCents } = cartTotals(lines, catalog);
   const rows = details.map(line => {
     const choices = [line.variant?.label, ...line.modifiers.map(modifier => modifier.label)].filter(Boolean);
     return `${line.quantity} × ${line.item.name}${choices.length ? ` (${choices.join(', ')})` : ''} — ${money(line.totalCents)}`;

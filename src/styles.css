@@ -16,7 +16,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; background: var(--canvas); }
-body { margin: 0; overflow-x: hidden; background: var(--canvas); }
+body { margin: 0; overflow-x: clip; background: var(--canvas); }
 button, a { font: inherit; }
 body::before {
   content: ""; position: fixed; inset: 0; z-index: 20; pointer-events: none; opacity: .22;
@@ -24,19 +24,19 @@ body::before {
   mix-blend-mode: multiply;
 }
 
-main { position: relative; min-height: 100vh; overflow: clip; background: radial-gradient(circle at 18% 18%, rgba(192,150,92,.16), transparent 22%), radial-gradient(circle at 82% 42%, rgba(60,97,86,.13), transparent 27%), repeating-linear-gradient(118deg, transparent 0 180px, rgba(120,95,59,.035) 182px 184px, transparent 186px 360px), var(--canvas); }
+main { position: relative; min-height: 100vh; overflow: visible; background: radial-gradient(circle at 18% 18%, rgba(192,150,92,.16), transparent 22%), radial-gradient(circle at 82% 42%, rgba(60,97,86,.13), transparent 27%), repeating-linear-gradient(118deg, transparent 0 180px, rgba(120,95,59,.035) 182px 184px, transparent 186px 360px), var(--canvas); }
 .scene { position: relative; min-height: 112vh; z-index: 2; }
 .label { margin: 0 0 1rem; color: var(--teal); font-size: 12px; font-weight: 600; letter-spacing: .29em; line-height: 1.4; text-transform: uppercase; }
 .label--rust { color: var(--rust); }
 h1, h2, h3, p { margin-top: 0; }
-h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: -.055em; }
+h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: var(--track-display); }
 
 .mountain-scene { position: absolute; inset: 0 0 auto; height: 100vh; margin: 0; z-index: 0; overflow: hidden; transform-origin: center top; }
 .mountain-scene img { width: 100%; height: 100%; object-fit: cover; object-position: center 56%; filter: saturate(.78) sepia(.08) contrast(.94); }
 .mountain-scene::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(242,237,223,.01), rgba(242,237,223,.04) 62%, var(--canvas) 99%), linear-gradient(90deg, rgba(242,237,223,.09), transparent 40%, rgba(242,237,223,.09)); }
 .mountain-haze { position: absolute; inset: 12% 0 0; background: radial-gradient(ellipse at 50% 42%, rgba(255,241,207,.48), transparent 34%); mix-blend-mode: screen; }
 .journey-rail { position: fixed; left: 26px; top: 50%; z-index: 15; display: flex; flex-direction: column; align-items: center; gap: 12px; color: rgba(31,73,77,.65); transform: translateY(-50%); }
-.journey-rail span { font-size: 8px; letter-spacing: .28em; text-transform: uppercase; writing-mode: vertical-rl; }
+.journey-rail span { font-size: var(--type-floor); letter-spacing: .18em; text-transform: uppercase; writing-mode: vertical-rl; }
 .journey-rail i { position: relative; display: block; width: 1px; height: 110px; background: rgba(31,73,77,.2); overflow: hidden; }
 .journey-rail i b { position: absolute; inset: 0; background: var(--rust); transform-origin: top; }
 .hero { min-height: 118vh; border-top: 2px solid var(--teal); }
@@ -44,7 +44,7 @@ h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; l
 .hero-copy { position: relative; width: min(690px, 48vw); margin-left: 8%; padding-top: 12vh; z-index: 3; }
 .hero h1 { font-size: clamp(6rem, 10.4vw, 11.5rem); line-height: .64; margin: 2rem 0 2.7rem; color: var(--ink); text-shadow: 0 16px 35px rgba(244,238,219,.62); }
 .hero h1 span, .hero h1 em { display: block; }
-.hero h1 em { margin-left: 24%; color: var(--rust); font-size: .74em; font-weight: 400; font-style: italic; letter-spacing: -.075em; }
+.hero h1 em { margin-left: 24%; color: var(--rust); font-size: .74em; font-weight: 400; font-style: italic; letter-spacing: var(--track-display); }
 .hero-intro { max-width: 440px; margin: 0 0 1.35rem; color: var(--teal); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.25rem, 1.65vw, 1.8rem); line-height: 1.25; }
 .hero-sub { color: #435451; font-size: 12px; line-height: 1.65; letter-spacing: .09em; text-transform: uppercase; }
 .follow { display: flex; align-items: center; gap: 18px; margin-top: 2.5rem; width: max-content; color: var(--rust); font-size: 11px; letter-spacing: .28em; text-decoration: none; text-transform: uppercase; }

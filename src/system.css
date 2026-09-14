@@ -1,0 +1,77 @@
+/* Last-loaded recipe. Header, type floor, display tracking, tap targets. */
+
+.cafe-header {
+  position: sticky;
+  top: 0;
+  z-index: 70;
+  background: var(--header-bg);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid var(--header-line);
+  box-shadow: none;
+}
+
+.cafe-wordmark,
+.header-nav a,
+.header-menu-button {
+  color: var(--header-ink);
+}
+
+.header-nav a,
+.header-menu-button,
+.header-nav .header-order,
+.cafe-wordmark small,
+.label,
+.visit-strip .label,
+.catalog-heading .label,
+.paper-card .label,
+.home-intro .label,
+.home-services-label,
+.home-signature,
+.home-action-number,
+.home-colophon > span,
+.journey-rail span,
+.split-meta,
+.price span,
+.hospitality-line,
+.catalog-section-heading p,
+.catalog-count,
+.hero-journey__beat span:last-child {
+  font-size: max(var(--type-floor), 12px);
+}
+
+.header-nav a,
+.header-menu-button,
+.header-nav .header-order {
+  letter-spacing: var(--track-ui);
+}
+
+.cafe-wordmark small {
+  line-height: 1.4;
+  letter-spacing: .12em;
+}
+
+h1, h2, h3,
+.page-masthead h1,
+.hero h1,
+.hero h1 em,
+.item-dialog-copy h2 {
+  letter-spacing: var(--track-display);
+}
+
+.quantity-stepper {
+  grid-template-columns: var(--tap) var(--tap) var(--tap);
+}
+
+.quantity-stepper button {
+  width: var(--tap);
+  height: var(--tap);
+}
+
+@media (max-width: 620px) {
+  .cafe-wordmark small,
+  .header-nav a,
+  .header-menu-button {
+    font-size: var(--type-floor);
+  }
+}
