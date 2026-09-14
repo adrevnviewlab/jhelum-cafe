@@ -29,3 +29,10 @@
 @media (prefers-reduced-motion: reduce) {
   .water-film { opacity: .22; }
 }
+
+@media (pointer: coarse) and (max-width: 760px), (max-width: 480px) {
+  .water-film {
+    opacity: .24;
+    filter: saturate(.7) contrast(.98) brightness(.82);
+  }
+}

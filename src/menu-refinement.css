@@ -10,8 +10,8 @@
 .catalog-item-body { min-width: 0; }
 .catalog-item--photographic .catalog-item-body { padding: 20px; }
 .catalog-item-body > p { font-size: .9375rem; line-height: 1.65; color: #465848; margin-top: 12px; }
-.catalog-item-title { display: grid; grid-template-columns: minmax(0,1fr) max-content; gap: 10px; align-items: baseline; }
-.catalog-item-title h3 { font-size: clamp(1.15rem,1.6vw,1.4rem); overflow-wrap: normal; text-wrap: balance; }
+.catalog-item-title { display: grid; grid-template-columns: minmax(0,1fr) max-content; gap: 10px; align-items: baseline; min-width: 0; }
+.catalog-item-title h3 { font-size: clamp(1.15rem,1.6vw,1.4rem); min-width: 0; overflow-wrap: anywhere; word-break: break-word; text-wrap: balance; }
 .catalog-item-title > span { font-size: .9375rem; color: #795026; white-space: nowrap; }
 .catalog-modifiers { padding: 12px; }
 .catalog-modifiers dl > div { column-gap: 14px; font-size: .8125rem; }
@@ -26,10 +26,28 @@
 }
 @media(max-width:1000px) { .catalog-items--photographic { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; } }
 @media(max-width:620px) {
-  .menu-catalog { width: calc(100% - 28px); padding: 22px 16px; }
-  .catalog-items--photographic { grid-template-columns: minmax(0,1fr); gap: 20px; }
-  .catalog-item-title h3 { font-size: 1.3rem; }
-  .catalog-item--photographic .catalog-item-body { padding: 18px; }
+  .menu-catalog { width: calc(100% - 28px); max-width: 100%; padding: 22px 12px; }
+  .catalog-items--photographic { grid-template-columns: minmax(0,1fr); gap: 12px; }
+  .catalog-item--photographic {
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr);
+    align-items: stretch;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .catalog-photo,
+  .catalog-items--portrait .catalog-photo {
+    aspect-ratio: auto;
+    width: 104px;
+    height: auto;
+    min-height: 100%;
+    max-height: none;
+    align-self: stretch;
+  }
+  .catalog-item-title { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: start; }
+  .catalog-item-title h3 { font-size: 1.05rem; line-height: 1.25; text-wrap: pretty; }
+  .catalog-item--photographic .catalog-item-body { padding: 10px 12px 12px; min-height: 0; }
+  .catalog-item-body > p { margin-top: 6px; font-size: .8125rem; line-height: 1.45; }
   .catalog-footer { flex-direction: column; }
   .catalog-footer-actions { width: 100%; }
 }

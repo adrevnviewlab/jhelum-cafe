@@ -38,7 +38,10 @@
 .cafe-page .menu-catalog { width: min(1180px, calc(100% - 36px)); margin: 0 auto; padding: 36px 0 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 .cafe-page .catalog-heading { display: none; }
 
-.catalog-item-body { display: flex; flex-direction: column; min-height: 205px; }
+.catalog-item-body { display: flex; flex-direction: column; min-height: 205px; min-width: 0; }
+@media (max-width: 620px) {
+  .catalog-item-body { min-height: 0; }
+}
 .catalog-item-action { margin-top: auto; padding-top: 18px; }
 .catalog-item-action :is(button,a) { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; padding: 10px 14px; border: 1px solid #224b42; border-radius: 999px; background: transparent; color: #224b42; font: 700 12px/1 Arial, sans-serif; text-decoration: none; cursor: pointer; }
 .catalog-item-action :is(button,a):hover { background: #224b42; color: #fff8e8; transform: translateY(-1px); }

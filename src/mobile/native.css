@@ -96,6 +96,7 @@ html.is-pinched .cafe-header {
 
   .native-tabbar {
     padding-top: 6px;
+    padding-bottom: env(safe-area-inset-bottom);
     min-height: calc(58px + env(safe-area-inset-bottom));
   }
   .native-tabbar a,

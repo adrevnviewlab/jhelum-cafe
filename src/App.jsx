@@ -21,6 +21,23 @@ import useCart from './useCart';
 import useCafeRoute, { directHref } from './useCafeRoute';
 import { SpringButton, SpringCard } from './Spring';
 
+function MountainArt({ priority = false }) {
+  return (
+    <picture>
+      <source media="(max-width: 760px)" srcSet="/mountain-sunset-mobile.webp" type="image/webp" width={720} height={882} />
+      <img
+        src="/mountain-sunset.webp"
+        alt="Golden sunset over snow-capped mountains, a forested valley and a rocky river."
+        width={1783}
+        height={882}
+        sizes="100vw"
+        decoding="async"
+        {...(priority ? { fetchPriority: 'high' } : { loading: 'lazy' })}
+      />
+    </picture>
+  );
+}
+
 function MountainScene() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, .16], [0, 260]);
@@ -28,7 +45,7 @@ function MountainScene() {
   const opacity = useTransform(scrollYProgress, [0, .14, .2], [.92, .66, 0]);
   return (
     <motion.figure className="mountain-scene" style={{ y, scale, opacity }}>
-      <img src="/mountain-sunset.webp" alt="Golden sunset over snow-capped mountains, a forested valley and a rocky river." width="1783" height="882" fetchPriority="high" />
+      <MountainArt priority />
       <div className="mountain-haze" />
     </motion.figure>
   );
@@ -356,7 +373,7 @@ export default function App() {
     {route.page === 'home' ? <main id="top"><JourneyRail /><Hero cartCount={cart.itemCount} /><Visit /><HomeDirect sections={menu.sections} items={menu.items} onAdd={addItem} /><MenuInvite onAdd={addItem} /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={openService} /><Footer /></main>
       : <main id="top" className={`cafe-page cafe-page--${route.page}`}>
           <figure className="page-hero-mountain">
-            <img src="/mountain-sunset.webp" alt="Golden sunset over snow-capped mountains, a forested valley and a rocky river." width="1783" height="882" />
+            <MountainArt />
           </figure>
           {inner}
         </main>}
