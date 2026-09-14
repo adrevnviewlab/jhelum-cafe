@@ -13,12 +13,10 @@ import SeoJsonLd from './SeoJsonLd';
 import CafeHeader from './CafeHeader';
 import Copyright from './Copyright';
 import { cafe } from './menuData';
-import { setFulfillment } from './lib/fulfillment';
 import { track } from './lib/analytics';
 import { useMenu } from './MenuProvider';
 import WaterRiver from './water/WaterRiver';
 import Icon from './Icon';
-import HeroJourney from './HeroJourney';
 import useCart from './useCart';
 import useCafeRoute, { directHref } from './useCafeRoute';
 import { SpringButton, SpringCard } from './Spring';
@@ -96,11 +94,6 @@ function Hero({ cartCount }) {
         <Label>Jhelum Direct / Brooklyn</Label>
         <h1 className="brand-title"><span>Jehlum</span><em>Cafe</em></h1>
         <p className="hero-intro">A taste of Jhelum in Brooklyn. Order direct from the cafe.</p>
-        <HeroJourney />
-        <div className="direct-hero-modes" role="group" aria-label="Pickup or delivery">
-          <SpringButton type="button" className="menu-anchor" onClick={() => { setFulfillment('pickup'); window.location.hash = directHref(cartCount).slice(1); }}>Pickup</SpringButton>
-          <SpringButton type="button" className="visit-action" onClick={() => { setFulfillment('delivery'); window.location.hash = 'direct'; }}>Delivery</SpringButton>
-        </div>
         <div className="utility-actions hero-actions">
           <SpringButton as="a" className="menu-anchor" href={directHref(cartCount)}>Order Direct <Icon /></SpringButton>
           <SpringButton as="a" className="visit-action" href="#menu">View menu <Icon /></SpringButton>
@@ -358,9 +351,15 @@ export default function App() {
 
   return <>
     <SeoJsonLd settings={menu.settings} sections={menu.sections} />
+    <WaterRiver />
     <CafeHeader page={route.page} cartCount={cart.itemCount} />
-    {route.page === 'home' ? <main id="top"><WaterRiver /><JourneyRail /><Hero cartCount={cart.itemCount} /><Visit /><HomeDirect sections={menu.sections} items={menu.items} onAdd={addItem} /><MenuInvite onAdd={addItem} /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={openService} /><Footer /></main>
-      : <main id="top" className={`cafe-page cafe-page--${route.page}`}>{inner}</main>}
+    {route.page === 'home' ? <main id="top"><JourneyRail /><Hero cartCount={cart.itemCount} /><Visit /><HomeDirect sections={menu.sections} items={menu.items} onAdd={addItem} /><MenuInvite onAdd={addItem} /><Beginning /><Kitchen /><PunjabInterlude /><Gathering /><TakeHome open={openService} /><Footer /></main>
+      : <main id="top" className={`cafe-page cafe-page--${route.page}`}>
+          <figure className="page-hero-mountain">
+            <img src="/mountain-sunset.webp" alt="Golden sunset over snow-capped mountains, a forested valley and a rocky river." width="1783" height="882" />
+          </figure>
+          {inner}
+        </main>}
     <MobileNav page={route.page} cartCount={cart.itemCount} />
     <div className={`cart-toast ${notice ? 'cart-toast--visible' : ''}`} role="status" aria-live="polite">{notice}</div>
     {panel?.type === 'item' && <ItemDialog itemId={panel.itemId} close={closePanel} add={addConfiguredItem} />}

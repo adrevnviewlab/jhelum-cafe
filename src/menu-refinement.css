@@ -48,7 +48,7 @@
 }
 
 /* Atmosphere without repeating landscape photographs in the reading sections. */
-main { background-image: radial-gradient(ellipse at 100% 27%,#ba824024,transparent 30%),radial-gradient(ellipse at 0 64%,#70876520,transparent 35%); background-repeat: no-repeat; background-size: cover; }
+main { background-image: radial-gradient(ellipse at 100% 27%,#ba824024,transparent 30%),radial-gradient(ellipse at 0 64%,#b89a5814,transparent 35%); background-repeat: no-repeat; background-size: cover; }
 .ui-icon { display: inline-block; width: 18px; height: 18px; flex: 0 0 18px; vertical-align: middle; }
 .primary-action,.menu-anchor,.visit-action,.header-nav button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
 .action-arrow .ui-icon { width: 22px; height: 22px; }

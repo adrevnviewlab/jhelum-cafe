@@ -12,7 +12,6 @@ import "./utility.css";
 import "./polish.css";
 import "./sunset.css";
 import "./accessibility.css";
-import "./hero-journey.css";
 import "./menu-refinement.css";
 import "./commerce.css";
 import "./responsive.css";

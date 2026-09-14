@@ -1,52 +1,50 @@
 import { useEffect, useRef, useState } from 'react';
-import { createWaterRenderer } from './renderer';
-import { fallbackPath } from './geometry';
 import './water.css';
 
+// Loop is Mixkit 10065 (free license: https://mixkit.co/license/).
+
 export default function WaterRiver() {
-  const canvas = useRef(null);
-  const [ready, setReady] = useState(false);
+  const video = useRef(null);
+  const [mode, setMode] = useState('video');
 
   useEffect(() => {
-    const element = canvas.current;
-    let dispose;
-
-    const failed = error => {
-      setReady(false);
-      console.warn('Water uses its SVG fallback:', error.message);
-    };
-    const start = () => {
-      try {
-        dispose = createWaterRenderer(element, element.closest('main'), { onError: failed });
-        setReady(true);
-      } catch (error) {
-        failed(error);
+    const element = video.current;
+    if (!element) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => {
+      if (reduced.matches) {
+        element.pause();
+        setMode('still');
+        return;
+      }
+      const play = element.play();
+      if (play && typeof play.then === 'function') {
+        play.then(() => setMode('video')).catch(() => setMode('still'));
       }
     };
-    const lost = event => {
-      event.preventDefault();
-      dispose?.();
-      dispose = undefined;
-      setReady(false);
-    };
-
-    element.addEventListener('webglcontextlost', lost);
-    element.addEventListener('webglcontextrestored', start);
-    start();
-
+    const failed = () => setMode('still');
+    element.addEventListener('error', failed);
+    reduced.addEventListener('change', apply);
+    apply();
     return () => {
-      dispose?.();
-      element.removeEventListener('webglcontextlost', lost);
-      element.removeEventListener('webglcontextrestored', start);
+      element.removeEventListener('error', failed);
+      reduced.removeEventListener('change', apply);
     };
   }, []);
 
   return (
-    <div className="water-layer" data-renderer={ready ? 'webgl' : 'fallback'} aria-hidden="true">
-      <svg className="water-fallback" viewBox="0 0 1900 7800" preserveAspectRatio="none">
-        <path d={fallbackPath} />
-      </svg>
-      <canvas ref={canvas} className="water-canvas" />
+    <div className="water-layer" data-renderer={mode} aria-hidden="true">
+      <video
+        ref={video}
+        className="water-film"
+        src="/river-flow.mp4"
+        poster="/river-flow-poster.jpg"
+        muted
+        playsInline
+        loop
+        autoPlay
+        preload="metadata"
+      />
     </div>
   );
 }

@@ -2,8 +2,8 @@ import { createNormalPixels, createRibbon } from './geometry';
 import { vertexShader, terrainFragmentShader, waterFragmentShader } from './shaders';
 
 export const waterMaterial = Object.freeze({
-  waveAmplitude: 2.6, normalStrength: .58, foamDistance: 9,
-  roughness: .42, pixelBudget: 1800000, maxPixelRatio: 1.5,
+  waveAmplitude: 3.4, normalStrength: .72, foamDistance: 14,
+  roughness: .3, pixelBudget: 1800000, maxPixelRatio: 1.5,
 });
 
 export function createWaterRenderer(canvas, main, options = {}) {
@@ -58,9 +58,11 @@ export function createWaterRenderer(canvas, main, options = {}) {
   }
   function resize() {
     viewportWidth=document.documentElement.clientWidth; viewportHeight=window.innerHeight;
-    mainTop=main.getBoundingClientRect().top+window.scrollY;
-    const hero=main.querySelector('.hero'), footer=main.querySelector('.footer');
-    start=hero.offsetTop+hero.offsetHeight-100; end=footer.offsetTop+110;
+    const page=document.querySelector('main')||main;
+    mainTop=page.getBoundingClientRect().top+window.scrollY;
+    const hero=page.querySelector('.hero'), footer=page.querySelector('.footer');
+    start=hero ? hero.offsetTop+hero.offsetHeight-100 : 0;
+    end=footer ? footer.offsetTop+110 : Math.max(page.scrollHeight, document.documentElement.scrollHeight, viewportHeight*2.4);
     const mesh=createRibbon(viewportWidth,start,end);
     gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer); gl.bufferData(gl.ARRAY_BUFFER,mesh.vertices,gl.STATIC_DRAW);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,mesh.indices,gl.STATIC_DRAW);
@@ -135,7 +137,11 @@ export function createWaterRenderer(canvas, main, options = {}) {
     framebuffer=keep(gl.createFramebuffer(),gl.deleteFramebuffer); gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,sceneDepth,0);
     observer=new ResizeObserver(invalidate); observer.observe(main);
-    observer.observe(main.querySelector('.hero')); observer.observe(main.querySelector('.footer'));
+    const page=document.querySelector('main');
+    if(page && page!==main) observer.observe(page);
+    const hero=document.querySelector('.hero'), footer=document.querySelector('.footer');
+    if(hero) observer.observe(hero);
+    if(footer) observer.observe(footer);
     window.addEventListener('resize',invalidate); window.addEventListener('scroll',wake,{passive:true});
     window.visualViewport?.addEventListener('resize',invalidate);
     document.addEventListener('visibilitychange',visibility); reduced.addEventListener('change',wake);

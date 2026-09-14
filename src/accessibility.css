@@ -1,17 +1,17 @@
 /* Opaque reading surfaces keep contrast independent of the river and photos. */
 :root {
-  --read-dark: #102b28;
+  --read-dark: #1c1814;
   --read-paper: #f5ead5;
   --read-ink: #203b36;
   --read-muted: #465848;
   --read-light: #fff9ec;
   --read-gold: #e3bd7b;
-  --read-soft: #cbd6c8;
+  --read-soft: #d6cfc2;
 }
 html { scroll-padding-top: calc(var(--header-height) + 16px); }
 #top,#menu,#beginning,#visit { scroll-margin-top: 8px; }
 :is(a,button,input,select,summary) { scroll-margin-block: calc(var(--header-height) + 18px) 90px; }
-.cafe-header { position: sticky; top: 0; z-index: 70; background: var(--read-dark); backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 1px solid #d4ae6b; }
+.cafe-header { position: sticky; top: 0; z-index: 70; background: var(--header-bg); backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 1px solid #d4ae6b; }
 .cafe-wordmark,.header-nav a { color: var(--read-light); }
 .header-nav a { display: inline-flex; align-items: center; min-height: 44px; }
 .header-nav a[aria-current=page] { color: var(--read-gold); }
@@ -25,7 +25,7 @@ html { scroll-padding-top: calc(var(--header-height) + 16px); }
 .hero h1 em,.hero .label,.hero .follow { color: var(--read-gold); text-shadow: 0 2px 14px #041413cc; }
 .hero .hero-intro { margin-bottom: .7rem; }
 .hero .visit-action { background: var(--read-dark); color: var(--read-light); }
-.hero .visit-action:hover { background: #254b43; }
+.hero .visit-action:hover { background: #2a241c; }
 .paper-card,.menu-card,.image-card,.footer-inner,.visit-strip,.menu-catalog,.menu-invite,.cafe-page { background: var(--read-paper); color: var(--read-ink); }
 .paper-card--dark,.editorial-note,.chapter-title,.home-salon,.featured-menu-panel,.home-colophon { background: var(--read-dark); color: var(--read-light); }
 .paper-card--dark :is(h2,h3),.editorial-note h3,.chapter-title h2 { color: var(--read-light); }
@@ -35,7 +35,7 @@ html { scroll-padding-top: calc(var(--header-height) + 16px); }
 .home-colophon p { color: var(--read-light); }
 .hero-copy,.placement,.editorial-note,.home-salon,.footer-inner { opacity: 1 !important; }
 .catalog-toolbar input::placeholder,.cafe-dialog input::placeholder { color: var(--read-muted); opacity: 1; }
-.journey-rail { padding: 12px 8px; background: var(--read-dark); border-radius: 20px; color: var(--read-gold); }
+.journey-rail { padding: 12px 8px; background: var(--shell); border-radius: 20px; color: var(--read-gold); }
 .cafe-dialog { color: var(--read-ink); }
 .arrival-guide details { border-bottom: 1px solid #8f754b55; }
 .arrival-guide summary { cursor: pointer; padding: 15px 0; min-height: 48px; font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--read-ink); }

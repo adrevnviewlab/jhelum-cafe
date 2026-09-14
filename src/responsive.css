@@ -131,7 +131,7 @@ textarea {
 @media (pointer: coarse) {
   :root { --touch-min: 48px; }
 
-  :is(a, button, summary, .choice-row, .header-nav a, .header-cart, .header-order, .menu-anchor, .visit-action, .primary-action, .secondary-action, .add-order-button, .catalog-toolbar button, .catalog-item-action :is(button, a), .mobile-nav a, .mobile-nav button, .hero-journey__beat) {
+  :is(a, button, summary, .choice-row, .header-nav a, .header-cart, .header-order, .menu-anchor, .visit-action, .primary-action, .secondary-action, .add-order-button, .catalog-toolbar button, .catalog-item-action :is(button, a), .mobile-nav a, .mobile-nav button) {
     min-height: var(--touch-min);
   }
 
@@ -262,8 +262,6 @@ textarea {
   .header-nav a { font-size: var(--type-floor); letter-spacing: var(--track-ui); }
   .hero h1 { font-size: clamp(2.8rem, 18vw, 4.6rem); }
   .hero-copy { width: calc(100% - 20px); margin-inline: auto; padding: 20px 16px; }
-  .hero-journey__beats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 6px; }
-  .hero-journey__mark { width: 38px; height: 38px; }
   .paper-card,
   .menu-card,
   .image-card { padding: 18px; }
@@ -279,10 +277,8 @@ textarea {
 
 /* Compact phones */
 @media (max-width: 480px) {
-  .hero-journey { width: 100%; }
-  .hero-journey__beats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .hero-actions { align-items: stretch; }
-  .hero-actions > * { flex: 1 1 100%; }
+  .hero-actions > * { flex: 1 1 calc(50% - 6px); }
   .visit-strip,
   .menu-invite { width: calc(100% - 24px); padding: 20px 16px; }
   .menu-catalog { width: calc(100% - 24px); }
@@ -415,8 +411,6 @@ textarea {
   .hero { min-height: auto; min-height: unset; }
   .hero-copy { width: min(92%, 720px); margin: 16px auto; padding: 18px 22px; }
   .hero h1 { font-size: clamp(2.4rem, 10vw, 4.2rem); margin: .6rem 0 1rem; }
-  .hero-journey__map { max-height: 22vh; }
-  .hero-journey__beats { margin-top: 8px; }
   .item-dialog-photo { height: min(28dvh, 180px); min-height: 120px; }
   .mobile-nav a,
   .mobile-nav button { min-height: 44px; font-size: 12px; }
